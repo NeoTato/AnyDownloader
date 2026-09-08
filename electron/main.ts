@@ -1,4 +1,5 @@
-import {
+import electron from "electron";
+const {
   app,
   BrowserWindow,
   ipcMain,
@@ -9,7 +10,7 @@ import {
   Menu,
   Notification,
   nativeImage,
-} from "electron";
+} = electron;
 import path from "node:path";
 import fs from "node:fs";
 import { BinManager } from "./binManager";
