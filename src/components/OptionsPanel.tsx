@@ -13,8 +13,6 @@ import {
   SlidersHorizontal,
   ChevronDown,
   ChevronUp,
-  Disc,
-  Music4,
   AlertCircle,
 } from "lucide-react";
 import type {
@@ -429,9 +427,12 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
           {/* Album Art / Cover Art Feature Toggle */}
           <div className="p-4 rounded-2xl bg-playful-yellow/10 dark:bg-yellow-950/20 border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] space-y-3">
-            <div className="flex items-center justify-between gap-3">
+            <div
+              onClick={() => setEmbedThumbnail(!embedThumbnail)}
+              className="flex items-center justify-between gap-3 cursor-pointer select-none group"
+            >
               <div className="flex items-start space-x-3">
-                <div className="w-10 h-10 rounded-full bg-playful-yellow border-2 border-playful-dark dark:border-slate-700 flex items-center justify-center text-slate-950 shrink-0 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
+                <div className="w-10 h-10 rounded-full bg-playful-yellow border-2 border-playful-dark dark:border-slate-700 flex items-center justify-center text-slate-950 shrink-0 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] group-hover:scale-105 transition-transform">
                   <ImageIcon
                     className="w-5 h-5"
                     strokeWidth={2.5}
@@ -439,7 +440,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="font-heading font-extrabold text-sm text-playful-dark dark:text-slate-100">
+                    <span className="font-heading font-extrabold text-sm text-playful-dark dark:text-slate-100 group-hover:text-playful-violet dark:group-hover:text-violet-400 transition-colors">
                       Embed Album Art / Cover Thumbnail
                     </span>
                     <span className="text-[10px] uppercase font-heading font-extrabold px-2 py-0.5 rounded-full bg-playful-pink text-white border border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
@@ -455,12 +456,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
               </div>
 
               {/* Interactive Toggle Switch */}
-              <button
-                type="button"
+              <div
                 role="switch"
                 aria-checked={embedThumbnail}
-                onClick={() => setEmbedThumbnail(!embedThumbnail)}
-                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark dark:border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] ${
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark dark:border-slate-700 transition-colors duration-200 ease-in-out shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] ${
                   embedThumbnail
                     ? "bg-playful-violet"
                     : "bg-slate-300 dark:bg-slate-700"
@@ -471,7 +470,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     embedThumbnail ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
-              </button>
+              </div>
             </div>
 
             <div className="pt-2 border-t-2 border-playful-dark/10 dark:border-slate-800 flex items-center justify-between">
@@ -519,62 +518,50 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
             {/* Expandable ID3 Tag Customizer */}
             {showMetadataEditor && (
-              <div className="pt-3 border-t-2 border-playful-dark/10 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs animate-in fade-in duration-200">
-                <div className="space-y-1">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200 flex items-center space-x-1">
-                    <Music4
-                      className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
-                      strokeWidth={2.5}
-                    />
-                    <span>Track Title</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={metaTitle}
-                    onChange={(e) => setMetaTitle(e.target.value)}
-                    placeholder="Track Title"
-                    className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200 flex items-center space-x-1">
-                    <Tag
-                      className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
-                      strokeWidth={2.5}
-                    />
-                    <span>Artist / Creator</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={metaArtist}
-                    onChange={(e) => setMetaArtist(e.target.value)}
-                    placeholder="Artist Name"
-                    className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200 flex items-center space-x-1">
-                    <Disc
-                      className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
-                      strokeWidth={2.5}
-                    />
-                    <span>Album Name (Optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={metaAlbum}
-                    onChange={(e) => setMetaAlbum(e.target.value)}
-                    placeholder="Album Name"
-                    className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
+              <div className="pt-3 border-t-2 border-playful-dark/10 dark:border-slate-800 space-y-3 animate-in fade-in duration-200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
-                      Year
+                      Track Title
+                    </label>
+                    <input
+                      type="text"
+                      value={metaTitle}
+                      onChange={(e) => setMetaTitle(e.target.value)}
+                      placeholder="Title"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
+                      Artist / Channel
+                    </label>
+                    <input
+                      type="text"
+                      value={metaArtist}
+                      onChange={(e) => setMetaArtist(e.target.value)}
+                      placeholder="Artist"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
+                      Album Name
+                    </label>
+                    <input
+                      type="text"
+                      value={metaAlbum}
+                      onChange={(e) => setMetaAlbum(e.target.value)}
+                      placeholder="Album name"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
+                      Release Year
                     </label>
                     <input
                       type="text"
@@ -606,39 +593,59 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
       {/* Timestamp / Clip Trimming */}
       <div className="space-y-3 pt-4 border-t-2 border-slate-100 dark:border-slate-800">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-full bg-playful-pink/20 dark:bg-pink-950/50 border-2 border-playful-dark dark:border-slate-700 flex items-center justify-center text-slate-900 dark:text-pink-400 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
+        <div
+          onClick={() => setClipEnabled(!clipEnabled)}
+          className={`flex items-center justify-between p-3.5 rounded-2xl border-2 border-playful-dark dark:border-slate-700 cursor-pointer select-none transition-all shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] group ${
+            clipEnabled
+              ? "bg-playful-pink/15 dark:bg-pink-950/40 border-playful-pink dark:border-pink-800"
+              : "bg-slate-50 dark:bg-[#161b22] hover:bg-slate-100 dark:hover:bg-[#21262d]"
+          }`}
+        >
+          <div className="flex items-center space-x-3">
+            <div
+              className={`w-9 h-9 rounded-full border-2 border-playful-dark dark:border-slate-700 flex items-center justify-center shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] transition-transform group-hover:scale-105 ${
+                clipEnabled
+                  ? "bg-playful-pink text-white"
+                  : "bg-playful-pink/20 dark:bg-pink-950/50 text-slate-900 dark:text-pink-400"
+              }`}
+            >
               <Scissors
-                className="w-4 h-4 text-playful-dark dark:text-pink-400"
+                className={`w-4 h-4 ${clipEnabled ? "text-white" : "text-playful-dark dark:text-pink-400"}`}
                 strokeWidth={2.5}
               />
             </div>
             <div>
-              <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-playful-dark dark:text-slate-200">
-                Trim / Clip Section
-              </span>
-              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                Download only a specific time range
+              <div className="flex items-center space-x-2">
+                <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-playful-dark dark:text-slate-200 group-hover:text-playful-pink dark:group-hover:text-pink-300 transition-colors">
+                  Trim / Clip Section
+                </span>
+                {clipEnabled && (
+                  <span className="text-[10px] uppercase font-heading font-extrabold px-2 py-0.5 rounded-full bg-playful-pink text-white border border-playful-dark dark:border-slate-700 shadow-pop-sm">
+                    Active
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                {clipEnabled
+                  ? "Trimming is enabled — adjust start & end timestamps below"
+                  : "Click anywhere on this card to enable custom start & end timestamps"}
               </p>
             </div>
           </div>
 
-          <button
-            type="button"
+          <div
             role="switch"
             aria-checked={clipEnabled}
-            onClick={() => setClipEnabled(!clipEnabled)}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark dark:border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] ${
+            className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark dark:border-slate-700 transition-colors duration-200 ease-in-out shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] ${
               clipEnabled ? "bg-playful-pink" : "bg-slate-300 dark:bg-slate-700"
             }`}
           >
             <span
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white border border-playful-dark dark:border-slate-700 shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white border-2 border-playful-dark dark:border-slate-700 shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
                 clipEnabled ? "translate-x-5" : "translate-x-0"
               }`}
             />
-          </button>
+          </div>
         </div>
 
         {clipEnabled && (
