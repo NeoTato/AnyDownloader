@@ -1,0 +1,30 @@
+﻿# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production build outputs
+dist/
+dist-electron/
+release/
+out/
+build/
+
+# Downloaded Binaries
+bin/
+*.exe
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.local
+
+# Environment
+.env
+.env.local

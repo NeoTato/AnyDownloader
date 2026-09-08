@@ -1,0 +1,33 @@
+{
+  "name": "any-downloader",
+  "version": "1.0.0",
+  "description": "Offline-first high quality media downloader powered by yt-dlp and FFmpeg",
+  "main": "dist-electron/main.js",
+  "author": "AnyDownloader",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6"
+  }
+}
