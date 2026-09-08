@@ -461,7 +461,9 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                 aria-checked={embedThumbnail}
                 onClick={() => setEmbedThumbnail(!embedThumbnail)}
                 className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark dark:border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] ${
-                  embedThumbnail ? "bg-playful-violet" : "bg-slate-300 dark:bg-slate-700"
+                  embedThumbnail
+                    ? "bg-playful-violet"
+                    : "bg-slate-300 dark:bg-slate-700"
                 }`}
               >
                 <span

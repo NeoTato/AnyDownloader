@@ -17,7 +17,9 @@
     background-size: 24px 24px;
     color: #1e293b;
     font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-    transition: background-color 200ms ease, color 200ms ease;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
   }
 
   .dark body,

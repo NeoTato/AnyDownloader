@@ -57,7 +57,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             Preferences & Engine Diagnostics
           </h2>
           <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-            Fine-tune download defaults, storage locations, theme appearance, and engine binaries
+            Fine-tune download defaults, storage locations, theme appearance,
+            and engine binaries
           </p>
         </div>
       </div>
@@ -91,14 +92,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 : "bg-slate-50 dark:bg-[#161b22] text-playful-dark dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#21262d] shadow-pop-sm"
             }`}
           >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center border-2 border-playful-dark ${isDark ? "bg-white text-playful-violet" : "bg-playful-violet/20 text-playful-violet"}`}>
-              <Moon className="w-5 h-5" strokeWidth={2.5} />
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center border-2 border-playful-dark ${isDark ? "bg-white text-playful-violet" : "bg-playful-violet/20 text-playful-violet"}`}
+            >
+              <Moon
+                className="w-5 h-5"
+                strokeWidth={2.5}
+              />
             </div>
             <div>
               <div className="text-xs font-heading font-extrabold uppercase tracking-wider">
                 Midnight Dark (Recommended)
               </div>
-              <div className={`text-[11px] ${isDark ? "text-violet-200" : "text-slate-500 dark:text-slate-400"}`}>
+              <div
+                className={`text-[11px] ${isDark ? "text-violet-200" : "text-slate-500 dark:text-slate-400"}`}
+              >
                 Sleek dark obsidian with vibrant neon candy pop accents
               </div>
             </div>
@@ -113,14 +121,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 : "bg-slate-50 dark:bg-[#161b22] text-playful-dark dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#21262d] shadow-pop-sm"
             }`}
           >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center border-2 border-playful-dark ${!isDark ? "bg-white text-playful-dark" : "bg-playful-amber/20 text-playful-dark dark:text-white"}`}>
-              <Sun className="w-5 h-5" strokeWidth={2.5} />
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center border-2 border-playful-dark ${!isDark ? "bg-white text-playful-dark" : "bg-playful-amber/20 text-playful-dark dark:text-white"}`}
+            >
+              <Sun
+                className="w-5 h-5"
+                strokeWidth={2.5}
+              />
             </div>
             <div>
               <div className="text-xs font-heading font-extrabold uppercase tracking-wider">
                 Paper Cream (Light)
               </div>
-              <div className={`text-[11px] ${!isDark ? "text-slate-800" : "text-slate-500 dark:text-slate-400"}`}>
+              <div
+                className={`text-[11px] ${!isDark ? "text-slate-800" : "text-slate-500 dark:text-slate-400"}`}
+              >
                 Warm retro tactile paper background with bold shadows
               </div>
             </div>

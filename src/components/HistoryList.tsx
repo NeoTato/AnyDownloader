@@ -97,14 +97,18 @@ export const HistoryList: React.FC<HistoryListProps> = ({
     return (
       <div className="sticker-card p-10 text-center space-y-4 max-w-md mx-auto my-8 bg-white dark:bg-[#161b22] dark:border-slate-700">
         <div className="w-16 h-16 rounded-2xl bg-playful-amber/20 dark:bg-yellow-950/50 text-playful-dark dark:text-yellow-400 flex items-center justify-center mx-auto border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] rotate-[-3deg]">
-          <History className="w-8 h-8" strokeWidth={2.5} />
+          <History
+            className="w-8 h-8"
+            strokeWidth={2.5}
+          />
         </div>
         <div className="space-y-1.5">
           <h3 className="font-heading font-extrabold text-xl text-playful-dark dark:text-slate-100">
             No download history yet!
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            Your downloaded tracks and videos will show up here for easy playback, location tracking, and 1-click folder access.
+            Your downloaded tracks and videos will show up here for easy
+            playback, location tracking, and 1-click folder access.
           </p>
         </div>
       </div>
@@ -126,9 +130,15 @@ export const HistoryList: React.FC<HistoryListProps> = ({
         >
           <div className="flex items-center space-x-2.5">
             {notice.type === "warning" ? (
-              <AlertTriangle className="w-4 h-4 shrink-0" strokeWidth={2.5} />
+              <AlertTriangle
+                className="w-4 h-4 shrink-0"
+                strokeWidth={2.5}
+              />
             ) : (
-              <Info className="w-4 h-4 shrink-0" strokeWidth={2.5} />
+              <Info
+                className="w-4 h-4 shrink-0"
+                strokeWidth={2.5}
+              />
             )}
             <span>{notice.message}</span>
           </div>
@@ -136,7 +146,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
             onClick={() => setNotice(null)}
             className="p-1 hover:bg-black/10 rounded-lg transition-colors ml-2"
           >
-            <X className="w-4 h-4" strokeWidth={2.5} />
+            <X
+              className="w-4 h-4"
+              strokeWidth={2.5}
+            />
           </button>
         </div>
       )}
@@ -146,14 +159,20 @@ export const HistoryList: React.FC<HistoryListProps> = ({
         <div className="flex items-center space-x-2.5">
           <h2 className="text-xl font-heading font-extrabold text-playful-dark dark:text-slate-100 flex items-center gap-2">
             <span>Download History</span>
-            <Sparkles className="w-4 h-4 text-playful-violet dark:text-violet-400" strokeWidth={2.5} />
+            <Sparkles
+              className="w-4 h-4 text-playful-violet dark:text-violet-400"
+              strokeWidth={2.5}
+            />
           </h2>
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-playful-violet text-white font-mono font-bold border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
             {history.length}
           </span>
           {missingCount > 0 && (
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-playful-amber dark:bg-amber-950/60 text-playful-dark dark:text-amber-300 font-bold border-2 border-playful-dark dark:border-amber-800 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] flex items-center space-x-1">
-              <AlertTriangle className="w-3.5 h-3.5 text-playful-dark dark:text-amber-400" strokeWidth={2.5} />
+              <AlertTriangle
+                className="w-3.5 h-3.5 text-playful-dark dark:text-amber-400"
+                strokeWidth={2.5}
+              />
               <span>{missingCount} missing</span>
             </span>
           )}
@@ -184,7 +203,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
               className="p-2 bg-white dark:bg-[#21262d] hover:bg-slate-50 dark:hover:bg-slate-700 text-playful-dark dark:text-slate-200 rounded-xl text-xs font-bold border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
               title="Refresh history and check file status"
             >
-              <RefreshCw className="w-4 h-4" strokeWidth={2.5} />
+              <RefreshCw
+                className="w-4 h-4"
+                strokeWidth={2.5}
+              />
             </button>
           )}
 
@@ -195,7 +217,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
               className="flex items-center space-x-1.5 px-3 py-1.5 bg-playful-amber hover:brightness-105 text-playful-dark rounded-xl text-xs font-bold border-2 border-playful-dark shadow-pop-sm hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
               title="Remove deleted or moved files from history"
             >
-              <RotateCcw className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <RotateCcw
+                className="w-3.5 h-3.5"
+                strokeWidth={2.5}
+              />
               <span className="hidden sm:inline">
                 Clean Missing ({missingCount})
               </span>
@@ -208,7 +233,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
             className="flex items-center space-x-1 px-3 py-1.5 bg-playful-pink/20 hover:bg-playful-pink text-playful-dark dark:text-slate-200 dark:hover:text-slate-900 rounded-xl text-xs font-bold border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
             title="Clear all history"
           >
-            <Trash2 className="w-3.5 h-3.5" strokeWidth={2.5} />
+            <Trash2
+              className="w-3.5 h-3.5"
+              strokeWidth={2.5}
+            />
             <span className="hidden sm:inline">Clear All</span>
           </button>
         </div>
@@ -216,7 +244,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" strokeWidth={2.5} />
+        <Search
+          className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"
+          strokeWidth={2.5}
+        />
         <input
           type="text"
           value={search}
@@ -261,9 +292,15 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-playful-dark dark:text-slate-200">
                       {item.mode === "video" ? (
-                        <Film className="w-5 h-5 text-playful-violet dark:text-violet-400" strokeWidth={2.5} />
+                        <Film
+                          className="w-5 h-5 text-playful-violet dark:text-violet-400"
+                          strokeWidth={2.5}
+                        />
                       ) : (
-                        <Music className="w-5 h-5 text-playful-pink dark:text-pink-400" strokeWidth={2.5} />
+                        <Music
+                          className="w-5 h-5 text-playful-pink dark:text-pink-400"
+                          strokeWidth={2.5}
+                        />
                       )}
                     </div>
                   )}
@@ -278,7 +315,9 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                   <div className="flex items-center space-x-2">
                     <h4
                       className={`font-heading font-extrabold text-sm line-clamp-1 ${
-                        isMissing ? "text-slate-600 dark:text-slate-400" : "text-playful-dark dark:text-slate-100"
+                        isMissing
+                          ? "text-slate-600 dark:text-slate-400"
+                          : "text-playful-dark dark:text-slate-100"
                       }`}
                     >
                       {item.title}
@@ -292,19 +331,28 @@ export const HistoryList: React.FC<HistoryListProps> = ({
 
                     {item.fileSize && (
                       <span className="flex items-center space-x-1 text-[11px] font-mono text-slate-600 dark:text-slate-400">
-                        <HardDrive className="w-3 h-3 text-slate-500" strokeWidth={2.5} />
+                        <HardDrive
+                          className="w-3 h-3 text-slate-500"
+                          strokeWidth={2.5}
+                        />
                         <span>{item.fileSize}</span>
                       </span>
                     )}
 
                     <span className="flex items-center space-x-1 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                      <Calendar className="w-3 h-3" strokeWidth={2.5} />
+                      <Calendar
+                        className="w-3 h-3"
+                        strokeWidth={2.5}
+                      />
                       <span>{dateStr}</span>
                     </span>
 
                     {isMissing && (
                       <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-lg bg-playful-amber dark:bg-amber-950/60 text-playful-dark dark:text-amber-300 font-bold text-[10px] border border-playful-dark dark:border-amber-800">
-                        <AlertTriangle className="w-3 h-3 text-playful-dark dark:text-amber-400" strokeWidth={2.5} />
+                        <AlertTriangle
+                          className="w-3 h-3 text-playful-dark dark:text-amber-400"
+                          strokeWidth={2.5}
+                        />
                         <span>File Missing / Moved</span>
                       </span>
                     )}
@@ -343,7 +391,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                       : "Open folder location"
                   }
                 >
-                  <Folder className="w-4 h-4 text-playful-dark dark:text-slate-200" strokeWidth={2.5} />
+                  <Folder
+                    className="w-4 h-4 text-playful-dark dark:text-slate-200"
+                    strokeWidth={2.5}
+                  />
                 </button>
 
                 {onRedownload && (
@@ -352,7 +403,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                     className="p-2 bg-white dark:bg-[#21262d] hover:bg-playful-mint/20 dark:hover:bg-emerald-950/50 text-playful-dark dark:text-slate-200 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
                     title="Re-open link in Downloader to download again"
                   >
-                    <RotateCcw className="w-4 h-4 text-playful-dark dark:text-slate-200" strokeWidth={2.5} />
+                    <RotateCcw
+                      className="w-4 h-4 text-playful-dark dark:text-slate-200"
+                      strokeWidth={2.5}
+                    />
                   </button>
                 )}
 
@@ -361,7 +415,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                   className="p-2 bg-white dark:bg-[#21262d] hover:bg-playful-pink/20 dark:hover:bg-pink-950/50 text-playful-dark dark:text-slate-200 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
                   title="Delete from history"
                 >
-                  <Trash2 className="w-4 h-4 text-slate-600 dark:text-slate-400 hover:text-playful-dark dark:hover:text-white" strokeWidth={2.5} />
+                  <Trash2
+                    className="w-4 h-4 text-slate-600 dark:text-slate-400 hover:text-playful-dark dark:hover:text-white"
+                    strokeWidth={2.5}
+                  />
                 </button>
               </div>
             </div>

@@ -10,14 +10,38 @@ interface UrlInputProps {
 }
 
 const SUPPORTED_PLATFORMS = [
-  { name: "YouTube", bg: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 dark:border-red-900/60" },
-  { name: "TikTok", bg: "bg-pink-100 text-pink-800 dark:bg-pink-950/60 dark:text-pink-300 dark:border-pink-900/60" },
-  { name: "Instagram", bg: "bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-900/60" },
-  { name: "Facebook", bg: "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-900/60" },
-  { name: "X / Twitter", bg: "bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-900/60" },
-  { name: "SoundCloud", bg: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-900/60" },
-  { name: "Reddit", bg: "bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-900/60" },
-  { name: "+1,000 sites", bg: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-900/60" },
+  {
+    name: "YouTube",
+    bg: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 dark:border-red-900/60",
+  },
+  {
+    name: "TikTok",
+    bg: "bg-pink-100 text-pink-800 dark:bg-pink-950/60 dark:text-pink-300 dark:border-pink-900/60",
+  },
+  {
+    name: "Instagram",
+    bg: "bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-900/60",
+  },
+  {
+    name: "Facebook",
+    bg: "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-900/60",
+  },
+  {
+    name: "X / Twitter",
+    bg: "bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-900/60",
+  },
+  {
+    name: "SoundCloud",
+    bg: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-900/60",
+  },
+  {
+    name: "Reddit",
+    bg: "bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-900/60",
+  },
+  {
+    name: "+1,000 sites",
+    bg: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-900/60",
+  },
 ];
 
 export const UrlInput: React.FC<UrlInputProps> = ({

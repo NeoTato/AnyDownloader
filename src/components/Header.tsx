@@ -135,13 +135,23 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onToggleTheme}
               className="p-2 rounded-full border-2 border-playful-dark dark:border-slate-700 bg-white dark:bg-[#21262d] text-playful-dark dark:text-playful-yellow shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-playful"
-              title={isDarkMode ? "Switch to Light Theme" : "Switch to Midnight Dark Theme"}
+              title={
+                isDarkMode
+                  ? "Switch to Light Theme"
+                  : "Switch to Midnight Dark Theme"
+              }
               aria-label="Toggle Theme"
             >
               {isDarkMode ? (
-                <Sun className="w-4 h-4 text-playful-yellow" strokeWidth={2.5} />
+                <Sun
+                  className="w-4 h-4 text-playful-yellow"
+                  strokeWidth={2.5}
+                />
               ) : (
-                <Moon className="w-4 h-4 text-playful-violet" strokeWidth={2.5} />
+                <Moon
+                  className="w-4 h-4 text-playful-violet"
+                  strokeWidth={2.5}
+                />
               )}
             </button>
           )}
