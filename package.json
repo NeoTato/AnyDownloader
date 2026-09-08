@@ -1,6 +1,6 @@
 {
   "name": "any-downloader",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Offline-first high quality media downloader powered by yt-dlp and FFmpeg",
   "main": "dist-electron/main.js",
   "author": "AnyDownloader",
@@ -8,7 +8,45 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dist": "npm run build && electron-builder --win",
+    "pack": "npm run build && electron-builder --dir"
+  },
+  "build": {
+    "appId": "com.anydownloader.app",
+    "productName": "AnyDownloader",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "public/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icon.svg"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "AnyDownloader"
+    }
   },
   "dependencies": {
     "lucide-react": "^1.16.0",
