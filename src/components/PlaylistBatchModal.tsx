@@ -59,7 +59,8 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
   const [videoQuality, setVideoQuality] = useState<VideoQuality>(
     settings?.defaultVideoQuality || "1080",
   );
-  const videoContainer: VideoContainer = settings?.defaultVideoContainer || "mp4";
+  const videoContainer: VideoContainer =
+    settings?.defaultVideoContainer || "mp4";
   const [audioFormat, setAudioFormat] = useState<AudioFormat>(
     settings?.defaultAudioFormat || "mp3",
   );
@@ -148,55 +149,66 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
   const unselectedCount = entries.length - selectedIds.size;
 
   return (
-    <div className="sticker-card p-6 space-y-5 animate-in fade-in duration-200">
+    <div className="sticker-card p-6 space-y-5 animate-in fade-in duration-200 bg-white dark:bg-[#161b22] dark:border-slate-700">
       {/* Header */}
-      <div className="flex items-start justify-between border-b-2 border-playful-dark/10 pb-4">
+      <div className="flex items-start justify-between border-b-2 border-playful-dark/10 dark:border-slate-800 pb-4">
         <div className="flex items-start space-x-3.5 min-w-0 flex-1">
-          <div className="w-11 h-11 rounded-2xl bg-playful-amber/20 text-playful-dark border-2 border-playful-dark shadow-pop-sm flex items-center justify-center shrink-0 rotate-[-4deg]">
-            <ListOrdered className="w-6 h-6" strokeWidth={2.5} />
+          <div className="w-11 h-11 rounded-2xl bg-playful-amber/20 dark:bg-yellow-950/50 text-playful-dark dark:text-yellow-400 border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] flex items-center justify-center shrink-0 rotate-[-4deg]">
+            <ListOrdered
+              className="w-6 h-6"
+              strokeWidth={2.5}
+            />
           </div>
           <div className="min-w-0 flex-1 space-y-1">
             <div className="flex items-center space-x-2">
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-playful-violet text-white border border-playful-dark shadow-pop-sm">
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-playful-violet text-white border border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
                 Playlist / Batch Extractor
               </span>
-              <span className="text-xs text-slate-600 font-mono font-bold">
+              <span className="text-xs text-slate-600 dark:text-slate-400 font-mono font-bold">
                 {entries.length} items found
               </span>
             </div>
-            <h3 className="font-heading font-extrabold text-base sm:text-lg text-playful-dark truncate">
+            <h3 className="font-heading font-extrabold text-base sm:text-lg text-playful-dark dark:text-slate-100 truncate">
               {media.title}
             </h3>
             {media.uploader && (
-              <p className="text-xs text-slate-600 font-medium">By {media.uploader}</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                By {media.uploader}
+              </p>
             )}
           </div>
         </div>
 
         <button
           onClick={onCancel}
-          className="p-1.5 text-slate-500 hover:text-playful-dark rounded-xl hover:bg-slate-100 transition-colors shrink-0"
+          className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-playful-dark dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
           title="Close"
         >
-          <X className="w-5 h-5" strokeWidth={2.5} />
+          <X
+            className="w-5 h-5"
+            strokeWidth={2.5}
+          />
         </button>
       </div>
 
       {/* Global Batch Format Configuration */}
-      <div className="p-4 rounded-2xl bg-slate-50 border-2 border-playful-dark shadow-pop-sm space-y-3">
+      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#21262d] border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] space-y-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Mode Switcher */}
-          <div className="flex items-center bg-white p-1 rounded-2xl border-2 border-playful-dark shadow-pop-sm">
+          <div className="flex items-center bg-white dark:bg-[#0d1117] p-1 rounded-2xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
             <button
               type="button"
               onClick={() => setMode("audio")}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 mode === "audio"
-                  ? "bg-playful-pink text-white border-2 border-playful-dark shadow-pop-sm"
-                  : "text-slate-600 hover:text-playful-dark"
+                  ? "bg-playful-pink text-white border-2 border-playful-dark dark:border-slate-600 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                  : "text-slate-600 dark:text-slate-300 hover:text-playful-dark dark:hover:text-white"
               }`}
             >
-              <Music className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <Music
+                className="w-3.5 h-3.5"
+                strokeWidth={2.5}
+              />
               <span>All as Audio (MP3 320k)</span>
             </button>
 
@@ -205,11 +217,14 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
               onClick={() => setMode("video")}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 mode === "video"
-                  ? "bg-playful-violet text-white border-2 border-playful-dark shadow-pop-sm"
-                  : "text-slate-600 hover:text-playful-dark"
+                  ? "bg-playful-violet text-white border-2 border-playful-dark dark:border-slate-600 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                  : "text-slate-600 dark:text-slate-300 hover:text-playful-dark dark:hover:text-white"
               }`}
             >
-              <Film className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <Film
+                className="w-3.5 h-3.5"
+                strokeWidth={2.5}
+              />
               <span>All as Video (MP4)</span>
             </button>
           </div>
@@ -221,7 +236,7 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
                 <select
                   value={audioFormat}
                   onChange={(e) => setAudioFormat(e.target.value as any)}
-                  className="px-2.5 py-1.5 bg-white border-2 border-playful-dark rounded-xl text-xs text-playful-dark font-bold shadow-pop-sm"
+                  className="px-2.5 py-1.5 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs text-playful-dark dark:text-slate-100 font-bold shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
                 >
                   <option value="mp3">MP3</option>
                   <option value="m4a">M4A</option>
@@ -229,14 +244,17 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
                   <option value="opus">OPUS</option>
                 </select>
 
-                <label className="flex items-center space-x-1.5 cursor-pointer text-playful-dark font-bold text-xs select-none">
+                <label className="flex items-center space-x-1.5 cursor-pointer text-playful-dark dark:text-slate-200 font-bold text-xs select-none">
                   <input
                     type="checkbox"
                     checked={embedThumbnail}
                     onChange={(e) => setEmbedThumbnail(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded border-2 border-playful-dark text-playful-violet"
+                    className="w-3.5 h-3.5 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet"
                   />
-                  <ImageIcon className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+                  <ImageIcon
+                    className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
+                    strokeWidth={2.5}
+                  />
                   <span>Cover Art</span>
                 </label>
               </>
@@ -244,7 +262,7 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
               <select
                 value={videoQuality}
                 onChange={(e) => setVideoQuality(e.target.value as any)}
-                className="px-2.5 py-1.5 bg-white border-2 border-playful-dark rounded-xl text-xs text-playful-dark font-bold shadow-pop-sm"
+                className="px-2.5 py-1.5 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs text-playful-dark dark:text-slate-100 font-bold shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
               >
                 <option value="best">Original Best</option>
                 <option value="1080">1080p FHD</option>
@@ -255,14 +273,14 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
         </div>
 
         {/* Save Folder */}
-        <div className="flex items-center justify-between text-xs pt-2 border-t border-playful-dark/10">
-          <span className="text-slate-600 truncate max-w-xs font-mono font-medium">
+        <div className="flex items-center justify-between text-xs pt-2 border-t border-playful-dark/10 dark:border-slate-700">
+          <span className="text-slate-600 dark:text-slate-400 truncate max-w-xs font-mono font-medium">
             Save to: {downloadPath || defaultPath}
           </span>
           <button
             type="button"
             onClick={handleBrowseFolder}
-            className="text-playful-violet hover:underline font-bold"
+            className="text-playful-violet dark:text-violet-400 hover:underline font-bold"
           >
             Change Folder
           </button>
@@ -273,20 +291,26 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
       <div className="space-y-2.5">
         {/* Search Input */}
         <div className="relative flex items-center">
-          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" strokeWidth={2.5} />
+          <Search
+            className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"
+            strokeWidth={2.5}
+          />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search tracks or artists in this playlist..."
-            className="w-full pl-11 pr-9 py-2 bg-white border-2 border-playful-dark rounded-2xl text-xs font-medium text-playful-dark placeholder-slate-400 shadow-pop-sm focus:outline-none focus:border-playful-violet"
+            className="w-full pl-11 pr-9 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-2xl text-xs font-medium text-playful-dark dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] focus:outline-none focus:border-playful-violet"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 text-slate-400 hover:text-playful-dark p-1"
+              className="absolute right-3 text-slate-400 hover:text-playful-dark dark:hover:text-white p-1"
             >
-              <X className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <X
+                className="w-3.5 h-3.5"
+                strokeWidth={2.5}
+              />
             </button>
           )}
         </div>
@@ -294,14 +318,14 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
         {/* Filter Pills & Select Controls */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 text-xs">
           {/* Filter Pills: All / Selected / Unselected */}
-          <div className="flex items-center bg-white p-1 rounded-2xl border-2 border-playful-dark shadow-pop-sm">
+          <div className="flex items-center bg-white dark:bg-[#0d1117] p-1 rounded-2xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
             <button
               type="button"
               onClick={() => setFilterTab("all")}
               className={`px-3 py-1 rounded-xl font-bold transition-all ${
                 filterTab === "all"
-                  ? "bg-playful-violet text-white border-2 border-playful-dark shadow-pop-sm"
-                  : "text-slate-600 hover:text-playful-dark"
+                  ? "bg-playful-violet text-white border-2 border-playful-dark dark:border-slate-600 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                  : "text-slate-600 dark:text-slate-300 hover:text-playful-dark dark:hover:text-white"
               }`}
             >
               All ({entries.length})
@@ -312,8 +336,8 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
               onClick={() => setFilterTab("selected")}
               className={`px-3 py-1 rounded-xl font-bold transition-all ${
                 filterTab === "selected"
-                  ? "bg-playful-violet text-white border-2 border-playful-dark shadow-pop-sm"
-                  : "text-slate-600 hover:text-playful-dark"
+                  ? "bg-playful-violet text-white border-2 border-playful-dark dark:border-slate-600 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                  : "text-slate-600 dark:text-slate-300 hover:text-playful-dark dark:hover:text-white"
               }`}
             >
               Selected ({selectedIds.size})
@@ -324,8 +348,8 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
               onClick={() => setFilterTab("unselected")}
               className={`px-3 py-1 rounded-xl font-bold transition-all ${
                 filterTab === "unselected"
-                  ? "bg-playful-violet text-white border-2 border-playful-dark shadow-pop-sm"
-                  : "text-slate-600 hover:text-playful-dark"
+                  ? "bg-playful-violet text-white border-2 border-playful-dark dark:border-slate-600 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                  : "text-slate-600 dark:text-slate-300 hover:text-playful-dark dark:hover:text-white"
               }`}
             >
               Unselected ({unselectedCount})
@@ -337,18 +361,24 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
             <button
               type="button"
               onClick={handleSelectVisible}
-              className="flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-white hover:bg-slate-50 text-playful-dark border-2 border-playful-dark shadow-pop-sm font-bold transition-all"
+              className="flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-white dark:bg-[#21262d] hover:bg-slate-50 dark:hover:bg-slate-700 text-playful-dark dark:text-slate-200 border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] font-bold transition-all"
             >
-              <CheckSquare className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+              <CheckSquare
+                className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
+                strokeWidth={2.5}
+              />
               <span>Select {searchQuery ? "Matching" : "All"}</span>
             </button>
 
             <button
               type="button"
               onClick={handleDeselectVisible}
-              className="flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-white hover:bg-slate-50 text-slate-600 hover:text-playful-dark border-2 border-playful-dark shadow-pop-sm font-bold transition-all"
+              className="flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-white dark:bg-[#21262d] hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 hover:text-playful-dark dark:hover:text-white border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] font-bold transition-all"
             >
-              <Square className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <Square
+                className="w-3.5 h-3.5"
+                strokeWidth={2.5}
+              />
               <span>Deselect {searchQuery ? "Matching" : "All"}</span>
             </button>
           </div>
@@ -358,7 +388,7 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
       {/* Tracks List (Scrollable) */}
       <div className="max-h-64 overflow-y-auto space-y-1.5 pr-1">
         {filteredEntries.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 text-xs bg-slate-50 rounded-2xl border-2 border-playful-dark border-dashed">
+          <div className="p-8 text-center text-slate-500 dark:text-slate-400 text-xs bg-slate-50 dark:bg-[#21262d] rounded-2xl border-2 border-playful-dark dark:border-slate-700 border-dashed">
             {searchQuery
               ? `No tracks matching "${searchQuery}" in ${filterTab} view.`
               : `No tracks found in ${filterTab} view.`}
@@ -371,20 +401,20 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
               <div
                 key={item.id}
                 onClick={() => handleToggleItem(item.id)}
-                className={`p-2.5 rounded-2xl border-2 border-playful-dark flex items-center space-x-3 cursor-pointer transition-all ${
+                className={`p-2.5 rounded-2xl border-2 border-playful-dark dark:border-slate-700 flex items-center space-x-3 cursor-pointer transition-all ${
                   isSelected
-                    ? "bg-violet-50/80 shadow-pop-sm text-playful-dark font-medium"
-                    : "bg-white text-slate-600 hover:bg-slate-50 shadow-sm"
+                    ? "bg-violet-50/80 dark:bg-violet-950/40 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-playful-dark dark:text-slate-100 font-medium"
+                    : "bg-white dark:bg-[#21262d] text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm"
                 }`}
               >
                 <input
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => {}} // Handled by container click
-                  className="w-4 h-4 rounded border-2 border-playful-dark text-playful-violet shrink-0 cursor-pointer"
+                  className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet shrink-0 cursor-pointer"
                 />
 
-                <span className="text-[11px] font-mono font-bold text-slate-500 w-5 text-right shrink-0">
+                <span className="text-[11px] font-mono font-bold text-slate-500 dark:text-slate-400 w-5 text-right shrink-0">
                   #{index + 1}
                 </span>
 
@@ -392,21 +422,29 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
                   <img
                     src={item.thumbnail}
                     alt={item.title}
-                    className="w-12 h-8 object-cover rounded-lg shrink-0 bg-slate-100 border border-playful-dark"
+                    className="w-12 h-8 object-cover rounded-lg shrink-0 bg-slate-100 dark:bg-slate-900 border border-playful-dark dark:border-slate-700"
                   />
                 ) : (
-                  <div className="w-12 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 text-playful-dark border border-playful-dark">
-                    <Music className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  <div className="w-12 h-8 rounded-lg bg-slate-100 dark:bg-slate-900 flex items-center justify-center shrink-0 text-playful-dark dark:text-slate-300 border border-playful-dark dark:border-slate-700">
+                    <Music
+                      className="w-3.5 h-3.5"
+                      strokeWidth={2.5}
+                    />
                   </div>
                 )}
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-heading font-extrabold truncate text-playful-dark">{item.title}</p>
-                  <div className="flex items-center space-x-3 text-[10px] text-slate-600">
+                  <p className="text-xs font-heading font-extrabold truncate text-playful-dark dark:text-slate-100">
+                    {item.title}
+                  </p>
+                  <div className="flex items-center space-x-3 text-[10px] text-slate-600 dark:text-slate-400">
                     {item.uploader && <span>{item.uploader}</span>}
                     {item.durationString && (
                       <span className="flex items-center space-x-0.5 font-mono">
-                        <Clock className="w-2.5 h-2.5" strokeWidth={2.5} />
+                        <Clock
+                          className="w-2.5 h-2.5"
+                          strokeWidth={2.5}
+                        />
                         <span>{item.durationString}</span>
                       </span>
                     )}
@@ -426,12 +464,18 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
           disabled={selectedIds.size === 0}
           className="w-full candy-btn py-3.5 text-white font-heading font-extrabold text-sm sm:text-base flex items-center justify-center space-x-2"
         >
-          <Download className="w-5 h-5" strokeWidth={2.5} />
+          <Download
+            className="w-5 h-5"
+            strokeWidth={2.5}
+          />
           <span>
             Download {selectedIds.size} Selected{" "}
             {selectedIds.size === 1 ? "Track" : "Tracks"}
           </span>
-          <Sparkles className="w-4 h-4 text-yellow-300" strokeWidth={2.5} />
+          <Sparkles
+            className="w-4 h-4 text-yellow-300"
+            strokeWidth={2.5}
+          />
         </button>
       </div>
     </div>

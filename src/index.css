@@ -3,15 +3,37 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    background-color: #FFFDF5;
-    background-image: radial-gradient(#CBD5E1 1.5px, transparent 1.5px);
-    background-size: 24px 24px;
-    color: #1E293B;
-    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  :root {
+    color-scheme: light;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  :root.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #fffdf5;
+    background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    color: #1e293b;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  .dark body,
+  html.dark body {
+    background-color: #0d1117;
+    background-image: radial-gradient(#21262d 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    color: #f1f5f9;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: "Outfit", system-ui, sans-serif;
   }
 }
@@ -25,16 +47,26 @@
 
 /* Sticker Card Primitive */
 .sticker-card {
-  background: #FFFFFF;
-  border: 2px solid #1E293B;
+  background: #ffffff;
+  border: 2px solid #1e293b;
   border-radius: 1.25rem;
-  box-shadow: 4px 4px 0px 0px #1E293B;
+  box-shadow: 4px 4px 0px 0px #1e293b;
   transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dark .sticker-card {
+  background: #161b22;
+  border: 2px solid #30363d;
+  box-shadow: 4px 4px 0px 0px #010409;
 }
 
 .sticker-card-hover:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #1E293B;
+  box-shadow: 6px 6px 0px 0px #1e293b;
+}
+
+.dark .sticker-card-hover:hover {
+  box-shadow: 6px 6px 0px 0px #010409;
 }
 
 /* Primary Candy Button */
@@ -45,22 +77,36 @@
   font-family: "Outfit", system-ui, sans-serif;
   font-weight: 700;
   border-radius: 9999px;
-  border: 2px solid #1E293B;
-  background-color: #8B5CF6;
-  color: #FFFFFF;
-  box-shadow: 3px 3px 0px 0px #1E293B;
+  border: 2px solid #1e293b;
+  background-color: #8b5cf6;
+  color: #ffffff;
+  box-shadow: 3px 3px 0px 0px #1e293b;
   transition: all 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dark .candy-btn {
+  border: 2px solid #30363d;
+  box-shadow: 3px 3px 0px 0px #010409;
 }
 
 .candy-btn:hover:not(:disabled) {
   transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px 0px #1E293B;
-  background-color: #7C3AED;
+  box-shadow: 5px 5px 0px 0px #1e293b;
+  background-color: #7c3aed;
+}
+
+.dark .candy-btn:hover:not(:disabled) {
+  box-shadow: 5px 5px 0px 0px #010409;
+  background-color: #9333ea;
 }
 
 .candy-btn:active:not(:disabled) {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px #1E293B;
+  box-shadow: 1px 1px 0px 0px #1e293b;
+}
+
+.dark .candy-btn:active:not(:disabled) {
+  box-shadow: 1px 1px 0px 0px #010409;
 }
 
 .candy-btn:disabled {
@@ -77,22 +123,40 @@
   font-family: "Outfit", system-ui, sans-serif;
   font-weight: 700;
   border-radius: 9999px;
-  border: 2px solid #1E293B;
-  background-color: #FFFFFF;
-  color: #1E293B;
-  box-shadow: 3px 3px 0px 0px #1E293B;
+  border: 2px solid #1e293b;
+  background-color: #ffffff;
+  color: #1e293b;
+  box-shadow: 3px 3px 0px 0px #1e293b;
   transition: all 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dark .candy-btn-secondary {
+  background-color: #21262d;
+  color: #f1f5f9;
+  border: 2px solid #30363d;
+  box-shadow: 3px 3px 0px 0px #010409;
 }
 
 .candy-btn-secondary:hover:not(:disabled) {
   transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px 0px #1E293B;
-  background-color: #FBBF24;
+  box-shadow: 5px 5px 0px 0px #1e293b;
+  background-color: #fbbf24;
+  color: #0f172a;
+}
+
+.dark .candy-btn-secondary:hover:not(:disabled) {
+  box-shadow: 5px 5px 0px 0px #010409;
+  background-color: #fbbf24;
+  color: #0f172a;
 }
 
 .candy-btn-secondary:active:not(:disabled) {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px #1E293B;
+  box-shadow: 1px 1px 0px 0px #1e293b;
+}
+
+.dark .candy-btn-secondary:active:not(:disabled) {
+  box-shadow: 1px 1px 0px 0px #010409;
 }
 
 /* Custom Playful Scrollbars */
@@ -106,12 +170,21 @@
   border-radius: 9999px;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.6);
+}
+
 ::-webkit-scrollbar-thumb {
-  background: #94A3B8;
-  border: 2px solid #FFFDF5;
+  background: #94a3b8;
+  border: 2px solid #fffdf5;
   border-radius: 9999px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border: 2px solid #0d1117;
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #8B5CF6;
+  background: #8b5cf6;
 }

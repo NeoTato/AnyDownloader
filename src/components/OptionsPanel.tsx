@@ -62,7 +62,6 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
   const [audioBitrate, setAudioBitrate] = useState<AudioBitrate>(
     settings?.defaultAudioBitrate || "320",
   );
-  // Feature requirement: dedicated album art / thumbnail toggle for audio extraction
   const [embedThumbnail, setEmbedThumbnail] = useState<boolean>(
     settings ? settings.defaultEmbedThumbnail : true,
   );
@@ -171,21 +170,45 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
     });
   };
 
+  // Filter video qualities by what's available
   const VIDEO_QUALITIES: {
     label: string;
     value: VideoQuality;
     desc: string;
+    badge?: string;
   }[] = [
     {
-      label: "Best / Original",
+      label: "Lossless Best (4K / 8K)",
       value: "best",
-      desc: "Maximum source resolution & bitstream",
+      desc: "Highest available resolution on stream",
+      badge: "Max Quality",
     },
-    { label: "4K (2160p)", value: "2160", desc: "Ultra HD" },
-    { label: "2K (1440p)", value: "1440", desc: "Quad HD" },
-    { label: "1080p FHD", value: "1080", desc: "Full HD" },
-    { label: "720p HD", value: "720", desc: "Standard HD" },
-    { label: "480p / 360p", value: "480", desc: "Compressed" },
+    {
+      label: "4K UHD (2160p)",
+      value: "2160",
+      desc: "Ultra High Definition",
+    },
+    {
+      label: "2K QHD (1440p)",
+      value: "1440",
+      desc: "Quad HD crisp fidelity",
+    },
+    {
+      label: "1080p FHD",
+      value: "1080",
+      desc: "Full HD 60fps standard",
+      badge: "Popular",
+    },
+    {
+      label: "720p HD",
+      value: "720",
+      desc: "Fast balanced download",
+    },
+    {
+      label: "480p SD",
+      value: "480",
+      desc: "Lightweight mobile storage",
+    },
   ];
 
   const AUDIO_FORMATS: { label: string; value: AudioFormat; desc: string }[] = [
@@ -205,30 +228,33 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
   ];
 
   return (
-    <div className="sticker-card p-5 sm:p-6 space-y-6 bg-white border-2 border-playful-dark shadow-pop">
+    <div className="sticker-card p-5 sm:p-6 space-y-6 bg-white dark:bg-[#161b22] dark:border-slate-700">
       {/* Mode Switcher Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 dark:border-slate-800 pb-5">
         <div>
-          <h2 className="text-lg font-heading font-extrabold text-playful-dark flex items-center space-x-2">
+          <h2 className="text-lg font-heading font-extrabold text-playful-dark dark:text-slate-100 flex items-center space-x-2">
             <span>Download Configuration</span>
           </h2>
-          <p className="text-xs font-medium text-playful-mutedFg">
+          <p className="text-xs font-medium text-playful-mutedFg dark:text-slate-400">
             Choose output stream format, audio bitrates, and album cover tags
           </p>
         </div>
 
         {/* Candy Mode Switcher */}
-        <div className="flex items-center bg-playful-muted p-1.5 rounded-full border-2 border-playful-dark shadow-pop-sm gap-1.5 self-start sm:self-auto">
+        <div className="flex items-center bg-playful-muted dark:bg-[#21262d] p-1.5 rounded-full border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] gap-1.5 self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setMode("video")}
             className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs sm:text-sm font-heading font-extrabold transition-playful ${
               mode === "video"
-                ? "bg-playful-violet text-white border-2 border-playful-dark shadow-pop-sm"
-                : "text-slate-700 hover:text-slate-900 hover:bg-slate-200/80"
+                ? "bg-playful-violet text-white border-2 border-playful-dark dark:border-slate-600 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-slate-700/60"
             }`}
           >
-            <Film className="w-4 h-4" strokeWidth={2.5} />
+            <Film
+              className="w-4 h-4"
+              strokeWidth={2.5}
+            />
             <span>Video</span>
           </button>
 
@@ -237,11 +263,14 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
             onClick={() => setMode("audio")}
             className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs sm:text-sm font-heading font-extrabold transition-playful ${
               mode === "audio"
-                ? "bg-playful-pink text-white border-2 border-playful-dark shadow-pop-sm"
-                : "text-slate-700 hover:text-slate-900 hover:bg-slate-200/80"
+                ? "bg-playful-pink text-white border-2 border-playful-dark dark:border-slate-600 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-slate-700/60"
             }`}
           >
-            <Music className="w-4 h-4" strokeWidth={2.5} />
+            <Music
+              className="w-4 h-4"
+              strokeWidth={2.5}
+            />
             <span>Audio Only</span>
           </button>
         </div>
@@ -252,7 +281,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
         <div className="space-y-5">
           {/* Resolution selector */}
           <div className="space-y-2">
-            <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 flex items-center space-x-1.5">
+            <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center space-x-1.5">
               <span>Target Resolution & Quality</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -261,16 +290,20 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   key={q.value}
                   type="button"
                   onClick={() => setVideoQuality(q.value)}
-                  className={`flex flex-col items-start p-3 rounded-2xl border-2 border-playful-dark text-left transition-playful ${
+                  className={`flex flex-col items-start p-3 rounded-2xl border-2 border-playful-dark dark:border-slate-700 text-left transition-playful ${
                     videoQuality === q.value
-                      ? "bg-playful-violet text-white shadow-pop"
-                      : "bg-playful-muted text-playful-dark shadow-pop-sm hover:bg-white hover:-translate-y-0.5"
+                      ? "bg-playful-violet text-white shadow-pop dark:shadow-[3px_3px_0px_#010409]"
+                      : "bg-playful-muted dark:bg-[#21262d] text-playful-dark dark:text-slate-200 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 hover:-translate-y-0.5"
                   }`}
                 >
-                  <span className="font-heading font-extrabold text-sm">{q.label}</span>
+                  <span className="font-heading font-extrabold text-sm">
+                    {q.label}
+                  </span>
                   <span
                     className={`text-[11px] font-medium mt-0.5 ${
-                      videoQuality === q.value ? "text-violet-200" : "text-slate-500"
+                      videoQuality === q.value
+                        ? "text-violet-200"
+                        : "text-slate-500 dark:text-slate-400"
                     }`}
                   >
                     {q.desc}
@@ -283,7 +316,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           {/* Container format */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
+              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 Container Format
               </label>
               <div className="flex gap-2">
@@ -292,10 +325,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     key={cnt}
                     type="button"
                     onClick={() => setVideoContainer(cnt)}
-                    className={`flex-1 py-2.5 px-3 rounded-xl border-2 border-playful-dark text-xs font-heading font-extrabold uppercase transition-playful ${
+                    className={`flex-1 py-2.5 px-3 rounded-xl border-2 border-playful-dark dark:border-slate-700 text-xs font-heading font-extrabold uppercase transition-playful ${
                       videoContainer === cnt
-                        ? "bg-playful-yellow text-slate-900 shadow-pop"
-                        : "bg-white text-slate-600 shadow-pop-sm hover:bg-slate-50"
+                        ? "bg-playful-yellow text-slate-900 shadow-pop dark:shadow-[2px_2px_0px_#010409]"
+                        : "bg-white dark:bg-[#21262d] text-slate-600 dark:text-slate-300 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-slate-50 dark:hover:bg-slate-700"
                     }`}
                   >
                     {cnt}
@@ -306,18 +339,21 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
             {/* Video Toggles */}
             <div className="space-y-2">
-              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
+              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 Additional Streams
               </label>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark bg-playful-muted p-2.5 rounded-xl border-2 border-playful-dark shadow-pop-sm hover:bg-white transition-colors">
+                <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark dark:text-slate-200 bg-playful-muted dark:bg-[#21262d] p-2.5 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 transition-colors">
                   <input
                     type="checkbox"
                     checked={embedSubtitles}
                     onChange={(e) => setEmbedSubtitles(e.target.checked)}
-                    className="w-4 h-4 rounded border-2 border-playful-dark text-playful-violet focus:ring-playful-violet accent-playful-violet"
+                    className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
                   />
-                  <Subtitles className="w-4 h-4 text-playful-violet" strokeWidth={2.5} />
+                  <Subtitles
+                    className="w-4 h-4 text-playful-violet dark:text-violet-400"
+                    strokeWidth={2.5}
+                  />
                   <span>Download & embed subtitles</span>
                 </label>
               </div>
@@ -329,7 +365,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
         <div className="space-y-5">
           {/* Audio Format Grid */}
           <div className="space-y-2">
-            <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
+            <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
               Audio Format
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -338,16 +374,20 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   key={f.value}
                   type="button"
                   onClick={() => setAudioFormat(f.value)}
-                  className={`flex flex-col items-start p-3 rounded-2xl border-2 border-playful-dark text-left transition-playful ${
+                  className={`flex flex-col items-start p-3 rounded-2xl border-2 border-playful-dark dark:border-slate-700 text-left transition-playful ${
                     audioFormat === f.value
-                      ? "bg-playful-pink text-white shadow-pop"
-                      : "bg-playful-muted text-playful-dark shadow-pop-sm hover:bg-white hover:-translate-y-0.5"
+                      ? "bg-playful-pink text-white shadow-pop dark:shadow-[3px_3px_0px_#010409]"
+                      : "bg-playful-muted dark:bg-[#21262d] text-playful-dark dark:text-slate-200 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 hover:-translate-y-0.5"
                   }`}
                 >
-                  <span className="font-heading font-extrabold text-sm">{f.label}</span>
+                  <span className="font-heading font-extrabold text-sm">
+                    {f.label}
+                  </span>
                   <span
                     className={`text-[11px] font-medium mt-0.5 ${
-                      audioFormat === f.value ? "text-pink-100" : "text-slate-500"
+                      audioFormat === f.value
+                        ? "text-pink-100"
+                        : "text-slate-500 dark:text-slate-400"
                     }`}
                   >
                     {f.desc}
@@ -360,7 +400,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           {/* Bitrate selection if MP3 or M4A */}
           {(audioFormat === "mp3" || audioFormat === "m4a") && (
             <div className="space-y-2">
-              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
+              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 Audio Bitrate Quality
               </label>
               <div className="flex gap-2">
@@ -374,10 +414,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     key={b.val}
                     type="button"
                     onClick={() => setAudioBitrate(b.val as AudioBitrate)}
-                    className={`flex-1 py-2 px-2 rounded-xl border-2 border-playful-dark text-xs font-heading font-extrabold transition-playful ${
+                    className={`flex-1 py-2 px-2 rounded-xl border-2 border-playful-dark dark:border-slate-700 text-xs font-heading font-extrabold transition-playful ${
                       audioBitrate === b.val
-                        ? "bg-playful-yellow text-slate-900 shadow-pop"
-                        : "bg-white text-slate-600 shadow-pop-sm hover:bg-slate-50"
+                        ? "bg-playful-yellow text-slate-900 shadow-pop dark:shadow-[2px_2px_0px_#010409]"
+                        : "bg-white dark:bg-[#21262d] text-slate-600 dark:text-slate-300 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-slate-50 dark:hover:bg-slate-700"
                     }`}
                   >
                     {b.label}
@@ -388,24 +428,28 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           )}
 
           {/* Album Art / Cover Art Feature Toggle */}
-          <div className="p-4 rounded-2xl bg-playful-yellow/10 border-2 border-playful-dark shadow-pop-sm space-y-3">
+          <div className="p-4 rounded-2xl bg-playful-yellow/10 dark:bg-yellow-950/20 border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-start space-x-3">
-                <div className="w-10 h-10 rounded-full bg-playful-yellow border-2 border-playful-dark flex items-center justify-center text-slate-950 shrink-0 shadow-pop-sm">
-                  <ImageIcon className="w-5 h-5" strokeWidth={2.5} />
+                <div className="w-10 h-10 rounded-full bg-playful-yellow border-2 border-playful-dark dark:border-slate-700 flex items-center justify-center text-slate-950 shrink-0 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
+                  <ImageIcon
+                    className="w-5 h-5"
+                    strokeWidth={2.5}
+                  />
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="font-heading font-extrabold text-sm text-playful-dark">
+                    <span className="font-heading font-extrabold text-sm text-playful-dark dark:text-slate-100">
                       Embed Album Art / Cover Thumbnail
                     </span>
-                    <span className="text-[10px] uppercase font-heading font-extrabold px-2 py-0.5 rounded-full bg-playful-pink text-white border border-playful-dark shadow-pop-sm">
+                    <span className="text-[10px] uppercase font-heading font-extrabold px-2 py-0.5 rounded-full bg-playful-pink text-white border border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
                       ID3 Art
                     </span>
                   </div>
-                  <p className="text-xs font-medium text-slate-600 mt-0.5">
-                    Embeds the high-resolution video thumbnail as album artwork inside the{" "}
-                    {audioFormat.toUpperCase()} file for music apps and smartphones.
+                  <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">
+                    Embeds the high-resolution video thumbnail as album artwork
+                    inside the {audioFormat.toUpperCase()} file for music apps
+                    and smartphones.
                   </p>
                 </div>
               </div>
@@ -416,55 +460,70 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                 role="switch"
                 aria-checked={embedThumbnail}
                 onClick={() => setEmbedThumbnail(!embedThumbnail)}
-                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm ${
-                  embedThumbnail ? "bg-playful-violet" : "bg-slate-300"
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark dark:border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] ${
+                  embedThumbnail ? "bg-playful-violet" : "bg-slate-300 dark:bg-slate-700"
                 }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white border-2 border-playful-dark shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white border-2 border-playful-dark dark:border-slate-700 shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
                     embedThumbnail ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
               </button>
             </div>
 
-            <div className="pt-2 border-t-2 border-playful-dark/10 flex items-center justify-between">
-              <label className="flex items-center space-x-2 cursor-pointer text-xs font-heading font-bold text-playful-dark">
+            <div className="pt-2 border-t-2 border-playful-dark/10 dark:border-slate-800 flex items-center justify-between">
+              <label className="flex items-center space-x-2 cursor-pointer text-xs font-heading font-bold text-playful-dark dark:text-slate-200">
                 <input
                   type="checkbox"
                   checked={embedMetadata}
                   onChange={(e) => setEmbedMetadata(e.target.checked)}
-                  className="w-4 h-4 rounded border-2 border-playful-dark text-playful-violet focus:ring-playful-violet accent-playful-violet"
+                  className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
                 />
-                <Tag className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+                <Tag
+                  className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
+                  strokeWidth={2.5}
+                />
                 <span>Auto-tag metadata (Artist, Title, Album tags)</span>
               </label>
 
               <button
                 type="button"
                 onClick={() => setShowMetadataEditor(!showMetadataEditor)}
-                className="flex items-center space-x-1 text-xs font-heading font-extrabold text-playful-violet hover:text-playful-violetHover transition-colors"
+                className="flex items-center space-x-1 text-xs font-heading font-extrabold text-playful-violet dark:text-violet-400 hover:text-playful-violetHover transition-colors"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={2.5} />
+                <SlidersHorizontal
+                  className="w-3.5 h-3.5"
+                  strokeWidth={2.5}
+                />
                 <span>
                   {showMetadataEditor
                     ? "Hide Tag Editor"
                     : "Customize ID3 Tags"}
                 </span>
                 {showMetadataEditor ? (
-                  <ChevronUp className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  <ChevronUp
+                    className="w-3.5 h-3.5"
+                    strokeWidth={2.5}
+                  />
                 ) : (
-                  <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  <ChevronDown
+                    className="w-3.5 h-3.5"
+                    strokeWidth={2.5}
+                  />
                 )}
               </button>
             </div>
 
             {/* Expandable ID3 Tag Customizer */}
             {showMetadataEditor && (
-              <div className="pt-3 border-t-2 border-playful-dark/10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs animate-in fade-in duration-200">
+              <div className="pt-3 border-t-2 border-playful-dark/10 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs animate-in fade-in duration-200">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark flex items-center space-x-1">
-                    <Music4 className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200 flex items-center space-x-1">
+                    <Music4
+                      className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
+                      strokeWidth={2.5}
+                    />
                     <span>Track Title</span>
                   </label>
                   <input
@@ -472,13 +531,16 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     value={metaTitle}
                     onChange={(e) => setMetaTitle(e.target.value)}
                     placeholder="Track Title"
-                    className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                    className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark flex items-center space-x-1">
-                    <Tag className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200 flex items-center space-x-1">
+                    <Tag
+                      className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
+                      strokeWidth={2.5}
+                    />
                     <span>Artist / Creator</span>
                   </label>
                   <input
@@ -486,13 +548,16 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     value={metaArtist}
                     onChange={(e) => setMetaArtist(e.target.value)}
                     placeholder="Artist Name"
-                    className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                    className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark flex items-center space-x-1">
-                    <Disc className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200 flex items-center space-x-1">
+                    <Disc
+                      className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
+                      strokeWidth={2.5}
+                    />
                     <span>Album Name (Optional)</span>
                   </label>
                   <input
@@ -500,13 +565,13 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     value={metaAlbum}
                     onChange={(e) => setMetaAlbum(e.target.value)}
                     placeholder="Album Name"
-                    className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                    className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
-                    <label className="text-[11px] font-heading font-bold text-playful-dark">
+                    <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
                       Year
                     </label>
                     <input
@@ -514,12 +579,12 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                       value={metaYear}
                       onChange={(e) => setMetaYear(e.target.value)}
                       placeholder="e.g. 2026"
-                      className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-mono font-bold text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-mono font-bold text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] font-heading font-bold text-playful-dark">
+                    <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
                       Genre
                     </label>
                     <input
@@ -527,7 +592,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                       value={metaGenre}
                       onChange={(e) => setMetaGenre(e.target.value)}
                       placeholder="e.g. Pop, Rock"
-                      className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-medium text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
                     />
                   </div>
                 </div>
@@ -538,17 +603,20 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
       )}
 
       {/* Timestamp / Clip Trimming */}
-      <div className="space-y-3 pt-4 border-t-2 border-slate-100">
+      <div className="space-y-3 pt-4 border-t-2 border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-full bg-playful-pink/20 border-2 border-playful-dark flex items-center justify-center text-slate-900 shadow-pop-sm">
-              <Scissors className="w-4 h-4 text-playful-dark" strokeWidth={2.5} />
+            <div className="w-8 h-8 rounded-full bg-playful-pink/20 dark:bg-pink-950/50 border-2 border-playful-dark dark:border-slate-700 flex items-center justify-center text-slate-900 dark:text-pink-400 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
+              <Scissors
+                className="w-4 h-4 text-playful-dark dark:text-pink-400"
+                strokeWidth={2.5}
+              />
             </div>
             <div>
-              <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-playful-dark">
+              <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-playful-dark dark:text-slate-200">
                 Trim / Clip Section
               </span>
-              <p className="text-[11px] font-medium text-slate-500">
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
                 Download only a specific time range
               </p>
             </div>
@@ -559,12 +627,12 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
             role="switch"
             aria-checked={clipEnabled}
             onClick={() => setClipEnabled(!clipEnabled)}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm ${
-              clipEnabled ? "bg-playful-pink" : "bg-slate-300"
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark dark:border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] ${
+              clipEnabled ? "bg-playful-pink" : "bg-slate-300 dark:bg-slate-700"
             }`}
           >
             <span
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white border border-playful-dark shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
+              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white border border-playful-dark dark:border-slate-700 shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
                 clipEnabled ? "translate-x-5" : "translate-x-0"
               }`}
             />
@@ -573,16 +641,16 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
         {clipEnabled && (
           <div className="space-y-2.5">
-            <div className="p-3.5 rounded-2xl bg-playful-muted border-2 border-playful-dark shadow-pop-sm grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in duration-200">
+            <div className="p-3.5 rounded-2xl bg-playful-muted dark:bg-[#21262d] border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in duration-200">
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark">
+                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
                     Start Time (MM:SS)
                   </label>
                   <button
                     type="button"
                     onClick={() => setClipStart("00:00")}
-                    className="text-[10px] font-heading font-extrabold text-playful-violet hover:underline"
+                    className="text-[10px] font-heading font-extrabold text-playful-violet dark:text-violet-400 hover:underline"
                   >
                     Start (00:00)
                   </button>
@@ -592,20 +660,20 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   value={clipStart}
                   onChange={(e) => setClipStart(e.target.value)}
                   placeholder="00:00"
-                  className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-mono font-bold text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                  className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-mono font-bold text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
                 />
               </div>
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-heading font-bold text-playful-dark">
+                  <label className="text-[11px] font-heading font-bold text-playful-dark dark:text-slate-200">
                     End Time (MM:SS)
                   </label>
                   {media.durationString && (
                     <button
                       type="button"
                       onClick={() => setClipEnd(media.durationString!)}
-                      className="text-[10px] font-heading font-extrabold text-playful-violet hover:underline"
+                      className="text-[10px] font-heading font-extrabold text-playful-violet dark:text-violet-400 hover:underline"
                     >
                       End ({media.durationString})
                     </button>
@@ -616,22 +684,25 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   value={clipEnd}
                   onChange={(e) => setClipEnd(e.target.value)}
                   placeholder={media.durationString || "00:00"}
-                  className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-mono font-bold text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
+                  className="w-full px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-mono font-bold text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
                 />
               </div>
             </div>
 
             {/* Validation Error Alert */}
             {clipError && (
-              <div className="p-3 rounded-2xl bg-rose-100 border-2 border-playful-dark shadow-pop-sm text-rose-900 flex items-center justify-between text-xs animate-in fade-in duration-150">
+              <div className="p-3 rounded-2xl bg-rose-100 dark:bg-rose-950/60 border-2 border-playful-dark dark:border-rose-900 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-rose-900 dark:text-rose-200 flex items-center justify-between text-xs animate-in fade-in duration-150">
                 <div className="flex items-center space-x-2">
-                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" strokeWidth={2.5} />
+                  <AlertCircle
+                    className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0"
+                    strokeWidth={2.5}
+                  />
                   <span className="font-heading font-bold">{clipError}</span>
                 </div>
                 <button
                   type="button"
                   onClick={handleResetClipRange}
-                  className="text-[11px] font-heading font-extrabold text-rose-900 hover:underline shrink-0 ml-2"
+                  className="text-[11px] font-heading font-extrabold text-rose-900 dark:text-rose-300 hover:underline shrink-0 ml-2"
                 >
                   Reset Range
                 </button>
@@ -642,16 +713,19 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
       </div>
 
       {/* Output Filename (Editable & Sanitized) */}
-      <div className="space-y-2 pt-4 border-t-2 border-slate-100">
+      <div className="space-y-2 pt-4 border-t-2 border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 flex items-center space-x-1.5">
-            <Edit3 className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+          <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center space-x-1.5">
+            <Edit3
+              className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400"
+              strokeWidth={2.5}
+            />
             <span>Output Filename</span>
           </label>
 
           <div className="flex items-center space-x-2">
             {customFilename.length > 100 && (
-              <span className="text-[10px] text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full border border-playful-dark font-heading font-bold">
+              <span className="text-[10px] text-amber-900 bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 rounded-full border border-playful-dark dark:border-amber-800 font-heading font-bold">
                 Long title: will auto-trim safely
               </span>
             )}
@@ -659,10 +733,13 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setCustomFilename(media.title)}
-                className="flex items-center space-x-1 text-[11px] text-playful-violet hover:underline font-heading font-extrabold"
+                className="flex items-center space-x-1 text-[11px] text-playful-violet dark:text-violet-400 hover:underline font-heading font-extrabold"
                 title="Reset to original video title"
               >
-                <RotateCcw className="w-3 h-3" strokeWidth={2.5} />
+                <RotateCcw
+                  className="w-3 h-3"
+                  strokeWidth={2.5}
+                />
                 <span>Reset</span>
               </button>
             )}
@@ -675,7 +752,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
             value={customFilename}
             onChange={(e) => setCustomFilename(e.target.value)}
             placeholder="Enter custom file name..."
-            className="w-full px-3.5 py-2.5 bg-playful-muted border-2 border-playful-dark rounded-xl text-xs sm:text-sm font-heading font-bold text-playful-dark placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-playful-violet"
+            className="w-full px-3.5 py-2.5 bg-playful-muted dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs sm:text-sm font-heading font-bold text-playful-dark dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-[#161b22] focus:ring-2 focus:ring-playful-violet"
           />
         </div>
       </div>
@@ -688,7 +765,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           disabled={!!clipError}
           className="candy-btn w-full py-4 text-base sm:text-lg shadow-pop-lg hover:shadow-pop-xl"
         >
-          <Download className="w-5 h-5 mr-2" strokeWidth={2.5} />
+          <Download
+            className="w-5 h-5 mr-2"
+            strokeWidth={2.5}
+          />
           <span>
             {clipError
               ? clipError
@@ -696,7 +776,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                 ? `Download Video (${videoQuality === "best" ? "Lossless Best" : videoQuality + "p"} ${videoContainer.toUpperCase()}${clipEnabled ? " • Trimmed" : ""})`
                 : `Extract Audio (${audioFormat.toUpperCase()}${audioFormat === "mp3" ? ` ${audioBitrate}k` : ""}${embedThumbnail ? " + Cover Art" : ""}${clipEnabled ? " • Trimmed" : ""})`}
           </span>
-          <Sparkles className="w-4 h-4 ml-2 text-playful-yellow fill-playful-yellow" strokeWidth={2.5} />
+          <Sparkles
+            className="w-4 h-4 ml-2 text-playful-yellow fill-playful-yellow"
+            strokeWidth={2.5}
+          />
         </button>
       </div>
     </div>

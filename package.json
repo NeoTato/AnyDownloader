@@ -1,7 +1,6 @@
 {
   "name": "any-downloader",
   "version": "1.0.0",
-  "type": "module",
   "description": "Offline-first high quality media downloader powered by yt-dlp and FFmpeg",
   "main": "dist-electron/main.js",
   "author": "AnyDownloader",

@@ -1,12 +1,12 @@
-import electron from "electron";
+import electron, { type BrowserWindow, type Tray } from "electron";
 const {
   app,
-  BrowserWindow,
+  BrowserWindow: BW,
   ipcMain,
   dialog,
   shell,
   clipboard,
-  Tray,
+  Tray: TrayClass,
   Menu,
   Notification,
   nativeImage,
@@ -36,7 +36,7 @@ let ytdlpRunner: YtdlpRunner;
 let appStore: AppStore;
 
 async function createWindow() {
-  win = new BrowserWindow({
+  win = new BW({
     title: "AnyDownloader - Offline Media Engine",
     width: 1100,
     height: 800,
@@ -59,7 +59,7 @@ async function createWindow() {
   });
 
   // Minimize to tray behavior
-  win.on("close", (event) => {
+  win.on("close", (event: any) => {
     const settings = appStore?.getSettings();
     if (settings?.minimizeToTray && !isQuitting) {
       event.preventDefault();
@@ -85,7 +85,7 @@ function createTray() {
 
   // Simple tray icon fallback
   const icon = nativeImage.createEmpty();
-  tray = new Tray(icon);
+  tray = new TrayClass(icon);
   tray.setToolTip("AnyDownloader - Offline Media Engine");
 
   const contextMenu = Menu.buildFromTemplate([
@@ -138,7 +138,7 @@ app.whenReady().then(async () => {
   createWindow();
 
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (BW.getAllWindows().length === 0) {
       createWindow();
     } else {
       win?.show();

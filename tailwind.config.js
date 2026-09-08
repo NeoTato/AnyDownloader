@@ -40,7 +40,7 @@ export default {
       },
       boxShadow: {
         "pop-sm": "2px 2px 0px 0px #1E293B",
-        "pop": "4px 4px 0px 0px #1E293B",
+        pop: "4px 4px 0px 0px #1E293B",
         "pop-hover": "6px 6px 0px 0px #1E293B",
         "pop-lg": "6px 6px 0px 0px #1E293B",
         "pop-xl": "8px 8px 0px 0px #1E293B",
@@ -51,14 +51,14 @@ export default {
       },
       animation: {
         "bounce-subtle": "bounce-subtle 2s infinite",
-        "wiggle": "wiggle 0.3s ease-in-out",
+        wiggle: "wiggle 0.3s ease-in-out",
       },
       keyframes: {
         "bounce-subtle": {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-4px)" },
         },
-        "wiggle": {
+        wiggle: {
           "0%, 100%": { transform: "rotate(0deg)" },
           "25%": { transform: "rotate(3deg)" },
           "75%": { transform: "rotate(-3deg)" },

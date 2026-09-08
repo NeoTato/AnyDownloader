@@ -9,10 +9,7 @@ import { DownloadQueue } from "./components/DownloadQueue";
 import { HistoryList } from "./components/HistoryList";
 import { SettingsModal } from "./components/SettingsModal";
 import { useDownloader } from "./hooks/useDownloader";
-import {
-  Sparkles,
-  HardDriveDownload,
-} from "lucide-react";
+import { Sparkles, HardDriveDownload } from "lucide-react";
 
 export function App() {
   const [activeTab, setActiveTab] = useState<
@@ -46,6 +43,23 @@ export function App() {
     engineMessage,
     readClipboard,
   } = useDownloader();
+
+  // Manage Dark / Light Theme Class on document root
+  const isDarkMode = settings ? settings.darkMode : true;
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      document.documentElement.classList.remove("light");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+    }
+  }, [isDarkMode]);
+
+  const handleToggleTheme = () => {
+    updateSettings({ darkMode: !isDarkMode });
+  };
 
   // Refresh history whenever history tab is selected
   useEffect(() => {
@@ -97,13 +111,15 @@ export function App() {
   ).length;
 
   return (
-    <div className="h-screen bg-playful-cream flex flex-col text-playful-dark font-sans select-none overflow-hidden">
-      {/* App Header */}
+    <div className="h-screen bg-playful-cream dark:bg-[#0d1117] flex flex-col text-playful-dark dark:text-slate-100 font-sans select-none overflow-hidden transition-colors">
+      {/* App Header with Theme Toggle */}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         queueCount={activeQueueCount}
         engineStatus={engineStatus}
+        isDarkMode={isDarkMode}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Area */}
@@ -114,15 +130,19 @@ export function App() {
               {/* Hero Banner if nothing loaded yet */}
               {!mediaInfo && !isInspecting && (
                 <div className="text-center space-y-2.5 pt-2 pb-1">
-                  <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-playful-amber border-2 border-playful-dark shadow-pop-sm text-playful-dark text-xs font-bold rotate-[-1deg]">
-                    <Sparkles className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+                  <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-playful-amber dark:bg-amber-400 border-2 border-playful-dark dark:border-slate-800 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-slate-900 text-xs font-bold rotate-[-1deg]">
+                    <Sparkles
+                      className="w-3.5 h-3.5 text-playful-violet"
+                      strokeWidth={2.5}
+                    />
                     <span>Next-Gen Offline Media Extractor</span>
                   </div>
-                  <h1 className="text-2xl sm:text-4xl font-heading font-extrabold tracking-tight text-playful-dark">
+                  <h1 className="text-2xl sm:text-4xl font-heading font-extrabold tracking-tight text-playful-dark dark:text-white">
                     Download Any Video or Audio in True Quality
                   </h1>
-                  <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto font-medium">
-                    Extract lossless 4K/8K video and pristine 320kbps audio with cover art directly on your computer.
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto font-medium">
+                    Extract lossless 4K/8K video and pristine 320kbps audio with
+                    cover art directly on your computer.
                   </p>
                 </div>
               )}
@@ -213,9 +233,12 @@ export function App() {
       </main>
 
       {/* Bottom Bar Status */}
-      <footer className="w-full border-t-2 border-playful-dark bg-white px-6 py-2 text-xs text-playful-dark flex items-center justify-between font-medium">
+      <footer className="w-full border-t-2 border-playful-dark dark:border-slate-800 bg-white dark:bg-[#161b22] px-6 py-2 text-xs text-playful-dark dark:text-slate-300 flex items-center justify-between font-medium transition-colors">
         <div className="flex items-center space-x-2">
-          <HardDriveDownload className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
+          <HardDriveDownload
+            className="w-3.5 h-3.5 text-playful-violet"
+            strokeWidth={2.5}
+          />
           <span className="font-mono text-[11px] truncate max-w-sm">
             Save Path: {settings?.defaultDownloadPath || "Standard Downloads"}
           </span>
@@ -223,12 +246,16 @@ export function App() {
 
         <div className="flex items-center space-x-3 text-[11px]">
           <span className="flex items-center space-x-1">
-            <span className="w-2 h-2 rounded-full bg-playful-mint border border-playful-dark"></span>
-            <span>yt-dlp {engineStatus?.ytdlp?.available ? "Ready" : "Loading"}</span>
+            <span className="w-2 h-2 rounded-full bg-playful-mint border border-playful-dark dark:border-slate-700"></span>
+            <span>
+              yt-dlp {engineStatus?.ytdlp?.available ? "Ready" : "Loading"}
+            </span>
           </span>
           <span className="flex items-center space-x-1">
-            <span className="w-2 h-2 rounded-full bg-playful-violet border border-playful-dark"></span>
-            <span>FFmpeg {engineStatus?.ffmpeg?.available ? "Active" : "Path"}</span>
+            <span className="w-2 h-2 rounded-full bg-playful-violet border border-playful-dark dark:border-slate-700"></span>
+            <span>
+              FFmpeg {engineStatus?.ffmpeg?.available ? "Active" : "Path"}
+            </span>
           </span>
         </div>
       </footer>
