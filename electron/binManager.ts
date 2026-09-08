@@ -1,8 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import https from "node:https";
-import electron from "electron";
-const { app } = electron;
+import { app } from "electron";
 import { spawn } from "node:child_process";
 import type { EngineStatus } from "../src/types";
 
