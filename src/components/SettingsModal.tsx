@@ -76,7 +76,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           `Reclaimed ${formatBytes(res.cleanedBytes)} by purging ${res.deletedCount} temporary chunk file${res.deletedCount > 1 ? "s" : ""}!`,
         );
       } else {
-        setCleanMessage("Temp cache is already clean! Zero orphan files found.");
+        setCleanMessage(
+          "Temp cache is already clean! Zero orphan files found.",
+        );
       }
       await loadStorageStats();
     } catch (err: any) {
@@ -112,7 +114,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             Preferences & Storage Diagnostics
           </h2>
           <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-            Fine-tune download defaults, disk usage analytics, theme appearance, and engine binaries
+            Fine-tune download defaults, disk usage analytics, theme appearance,
+            and engine binaries
           </p>
         </div>
       </div>
@@ -132,7 +135,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 Storage & Drive Analytics
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-                Live capacity tracking for your download destination and app data
+                Live capacity tracking for your download destination and app
+                data
               </p>
             </div>
           </div>
@@ -173,7 +177,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span className="font-bold text-playful-dark dark:text-white">
                   {formatBytes(storageStats.freeDiskBytes)} free
                 </span>{" "}
-                of {formatBytes(storageStats.totalDiskBytes)} ({storageStats.diskUsagePercent}% used)
+                of {formatBytes(storageStats.totalDiskBytes)} (
+                {storageStats.diskUsagePercent}% used)
               </div>
             </div>
 
@@ -186,7 +191,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       ? "bg-playful-amber"
                       : "bg-playful-mint"
                 }`}
-                style={{ width: `${Math.min(100, Math.max(2, storageStats.diskUsagePercent))}%` }}
+                style={{
+                  width: `${Math.min(100, Math.max(2, storageStats.diskUsagePercent))}%`,
+                }}
               />
             </div>
           </div>
@@ -201,7 +208,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <span>Media Library</span>
             </div>
             <div className="text-base font-heading font-extrabold text-playful-dark dark:text-white">
-              {storageStats ? formatBytes(storageStats.totalHistoryBytes) : "..."}
+              {storageStats
+                ? formatBytes(storageStats.totalHistoryBytes)
+                : "..."}
             </div>
             <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
               {storageStats?.totalHistoryCount || 0} files in download history
@@ -244,7 +253,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               Temporary Cache & Chunk Cleaner
             </h4>
             <p className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
-              Purges orphan `.part` and `.ytdl` files left over from cancelled or interrupted downloads
+              Purges orphan `.part` and `.ytdl` files left over from cancelled
+              or interrupted downloads
             </p>
           </div>
           <button
@@ -253,7 +263,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             disabled={isCleaningCache}
             className="candy-btn px-4 py-2 text-xs font-bold shrink-0 flex items-center space-x-1.5 bg-playful-pink text-white disabled:opacity-50"
           >
-            <Trash2 className="w-3.5 h-3.5" strokeWidth={2.5} />
+            <Trash2
+              className="w-3.5 h-3.5"
+              strokeWidth={2.5}
+            />
             <span>{isCleaningCache ? "Cleaning..." : "Purge Temp Cache"}</span>
           </button>
         </div>

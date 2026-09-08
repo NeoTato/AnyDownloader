@@ -34,9 +34,21 @@ let binManager: BinManager;
 let ytdlpRunner: YtdlpRunner;
 let appStore: AppStore;
 
+function getAppIcon() {
+  const publicDir =
+    process.env.VITE_PUBLIC || path.join(__dirname, "../public");
+  const iconPng = path.join(publicDir, "icon.png");
+  const iconSvg = path.join(publicDir, "icon.svg");
+  if (fs.existsSync(iconPng)) return nativeImage.createFromPath(iconPng);
+  if (fs.existsSync(iconSvg)) return nativeImage.createFromPath(iconSvg);
+  return nativeImage.createEmpty();
+}
+
 async function createWindow() {
+  const appIcon = getAppIcon();
   win = new BrowserWindow({
     title: "AnyDownloader - Offline Media Engine",
+    icon: appIcon,
     width: 1100,
     height: 800,
     minWidth: 880,
@@ -82,9 +94,8 @@ async function createWindow() {
 function createTray() {
   if (tray) return;
 
-  // Simple tray icon fallback
-  const icon = nativeImage.createEmpty();
-  tray = new Tray(icon);
+  const appIcon = getAppIcon();
+  tray = new Tray(appIcon);
   tray.setToolTip("AnyDownloader - Offline Media Engine");
 
   const contextMenu = Menu.buildFromTemplate([
