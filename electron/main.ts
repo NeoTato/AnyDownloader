@@ -17,9 +17,6 @@ import { YtdlpRunner } from "./ytdlpRunner";
 import { AppStore } from "./store";
 import type { DownloadOptions } from "../src/types";
 
-// Set App User Model ID for Windows Notifications
-app.setAppUserModelId("com.anydownloader.app");
-
 process.env.DIST = path.join(__dirname, "../dist");
 process.env.VITE_PUBLIC = app.isPackaged
   ? process.env.DIST
@@ -44,7 +41,7 @@ async function createWindow() {
     height: 800,
     minWidth: 880,
     minHeight: 650,
-    backgroundColor: "#0b0f19",
+    backgroundColor: "#FFFDF5",
     show: false,
     webPreferences: {
       preload,
@@ -127,6 +124,9 @@ function createTray() {
 }
 
 app.whenReady().then(async () => {
+  if (process.platform === "win32") {
+    app.setAppUserModelId("com.anydownloader.app");
+  }
   appStore = new AppStore();
   await binManager.init();
 
