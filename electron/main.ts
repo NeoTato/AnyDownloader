@@ -323,8 +323,147 @@ function setupIpcHandlers() {
     };
   });
 
+  // Storage & Disk Analytics
+  ipcMain.handle("get-storage-stats", async () => {
+    const settings = appStore?.getSettings();
+    const downloadPath =
+      settings?.defaultDownloadPath || app.getPath("downloads");
+
+    let freeDiskBytes = 0;
+    let totalDiskBytes = 0;
+    let diskUsagePercent = 0;
+    let driveLetter = "C:";
+
+    try {
+      const targetDir = fs.existsSync(downloadPath)
+        ? downloadPath
+        : app.getPath("userData");
+      if (fs.existsSync(targetDir)) {
+        const statfs = fs.statfsSync(targetDir);
+        freeDiskBytes = statfs.bfree * statfs.bsize;
+        totalDiskBytes = statfs.blocks * statfs.bsize;
+        if (totalDiskBytes > 0) {
+          diskUsagePercent = Math.round(
+            ((totalDiskBytes - freeDiskBytes) / totalDiskBytes) * 100,
+          );
+        }
+      }
+      if (process.platform === "win32") {
+        const root = path.parse(path.resolve(targetDir)).root;
+        if (root) driveLetter = root.replace(/[\\/]/g, "");
+      }
+    } catch (e) {
+      console.error("Failed to query disk stats:", e);
+    }
+
+    // Media library footprint from download history
+    const history = appStore?.getHistory() || [];
+    let totalHistoryBytes = 0;
+    let totalHistoryCount = 0;
+    for (const item of history) {
+      if (item.filePath && fs.existsSync(item.filePath)) {
+        try {
+          const fileStat = fs.statSync(item.filePath);
+          totalHistoryBytes += fileStat.size;
+          totalHistoryCount += 1;
+        } catch {}
+      }
+    }
+
+    // App & engine footprint in AppData
+    let appDataBytes = 0;
+    try {
+      appDataBytes = getDirSizeBytes(app.getPath("userData"));
+    } catch {}
+
+    // Orphan/interrupted temp cache (.part, .ytdl) in destination folder
+    let tempCacheBytes = 0;
+    try {
+      if (fs.existsSync(downloadPath)) {
+        const files = fs.readdirSync(downloadPath);
+        for (const file of files) {
+          if (
+            file.endsWith(".part") ||
+            file.endsWith(".ytdl") ||
+            file.includes(".temp.")
+          ) {
+            try {
+              const stat = fs.statSync(path.join(downloadPath, file));
+              tempCacheBytes += stat.size;
+            } catch {}
+          }
+        }
+      }
+    } catch {}
+
+    return {
+      totalHistoryBytes,
+      totalHistoryCount,
+      appDataBytes,
+      freeDiskBytes,
+      totalDiskBytes,
+      diskUsagePercent,
+      tempCacheBytes,
+      driveLetter,
+    };
+  });
+
+  ipcMain.handle("clean-temp-cache", async () => {
+    const settings = appStore?.getSettings();
+    const downloadPath =
+      settings?.defaultDownloadPath || app.getPath("downloads");
+
+    let cleanedBytes = 0;
+    let deletedCount = 0;
+
+    try {
+      if (fs.existsSync(downloadPath)) {
+        const files = fs.readdirSync(downloadPath);
+        for (const file of files) {
+          if (
+            file.endsWith(".part") ||
+            file.endsWith(".ytdl") ||
+            file.includes(".temp.")
+          ) {
+            try {
+              const targetFile = path.join(downloadPath, file);
+              const stat = fs.statSync(targetFile);
+              fs.unlinkSync(targetFile);
+              cleanedBytes += stat.size;
+              deletedCount += 1;
+            } catch (err) {
+              console.error(`Failed to delete temp file ${file}:`, err);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error cleaning temp cache:", err);
+    }
+
+    return { cleanedBytes, deletedCount };
+  });
+
   // Clipboard
   ipcMain.handle("read-clipboard", async () => {
     return clipboard.readText();
   });
+}
+
+function getDirSizeBytes(dirPath: string): number {
+  let total = 0;
+  if (!fs.existsSync(dirPath)) return 0;
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    try {
+      if (entry.isDirectory()) {
+        total += getDirSizeBytes(fullPath);
+      } else if (entry.isFile()) {
+        const stat = fs.statSync(fullPath);
+        total += stat.size;
+      }
+    } catch {}
+  }
+  return total;
 }

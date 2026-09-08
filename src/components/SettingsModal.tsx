@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Settings as SettingsIcon,
   RefreshCw,
@@ -10,8 +10,12 @@ import {
   Moon,
   Sun,
   Palette,
+  Trash2,
+  Database,
+  Sparkles,
+  Folder,
 } from "lucide-react";
-import type { AppSettings, EngineStatus } from "../types";
+import type { AppSettings, EngineStatus, StorageStats } from "../types";
 
 interface SettingsModalProps {
   settings: AppSettings | null;
@@ -23,6 +27,14 @@ interface SettingsModalProps {
   engineMessage: string | null;
 }
 
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+}
+
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   settings,
   onUpdateSettings,
@@ -32,6 +44,49 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   isUpdatingEngine,
   engineMessage,
 }) => {
+  const [storageStats, setStorageStats] = useState<StorageStats | null>(null);
+  const [isLoadingStorage, setIsLoadingStorage] = useState<boolean>(false);
+  const [isCleaningCache, setIsCleaningCache] = useState<boolean>(false);
+  const [cleanMessage, setCleanMessage] = useState<string | null>(null);
+
+  const loadStorageStats = async () => {
+    if (!window.electronAPI?.getStorageStats) return;
+    setIsLoadingStorage(true);
+    try {
+      const stats = await window.electronAPI.getStorageStats();
+      setStorageStats(stats);
+    } catch (e) {
+      console.error("Failed to load storage stats:", e);
+    } finally {
+      setIsLoadingStorage(false);
+    }
+  };
+
+  useEffect(() => {
+    loadStorageStats();
+  }, [settings?.defaultDownloadPath]);
+
+  const handleCleanTempCache = async () => {
+    if (!window.electronAPI?.cleanTempCache) return;
+    setIsCleaningCache(true);
+    try {
+      const res = await window.electronAPI.cleanTempCache();
+      if (res.deletedCount > 0) {
+        setCleanMessage(
+          `Reclaimed ${formatBytes(res.cleanedBytes)} by purging ${res.deletedCount} temporary chunk file${res.deletedCount > 1 ? "s" : ""}!`,
+        );
+      } else {
+        setCleanMessage("Temp cache is already clean! Zero orphan files found.");
+      }
+      await loadStorageStats();
+    } catch (err: any) {
+      setCleanMessage(`Failed to clean cache: ${err.message}`);
+    } finally {
+      setIsCleaningCache(false);
+      setTimeout(() => setCleanMessage(null), 5000);
+    }
+  };
+
   if (!settings) return null;
 
   const handleBrowse = async () => {
@@ -54,12 +109,172 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
         <div>
           <h2 className="text-xl sm:text-2xl font-heading font-extrabold text-playful-dark dark:text-white">
-            Preferences & Engine Diagnostics
+            Preferences & Storage Diagnostics
           </h2>
           <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-            Fine-tune download defaults, storage locations, theme appearance,
-            and engine binaries
+            Fine-tune download defaults, disk usage analytics, theme appearance, and engine binaries
           </p>
+        </div>
+      </div>
+
+      {/* Storage & Disk Usage Analytics Dashboard */}
+      <div className="sticker-card p-6 space-y-5">
+        <div className="flex items-center justify-between border-b-2 border-playful-dark/10 dark:border-slate-800 pb-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-playful-mint/30 text-playful-dark dark:text-white flex items-center justify-center border-2 border-playful-dark shadow-pop-sm">
+              <HardDrive
+                className="w-5 h-5 text-playful-dark dark:text-white"
+                strokeWidth={2.5}
+              />
+            </div>
+            <div>
+              <h3 className="font-heading font-extrabold text-base text-playful-dark dark:text-white">
+                Storage & Drive Analytics
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                Live capacity tracking for your download destination and app data
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={loadStorageStats}
+            disabled={isLoadingStorage}
+            className="candy-btn-secondary px-3 py-1.5 text-xs font-bold flex items-center space-x-1.5 disabled:opacity-50"
+            title="Refresh Storage Analytics"
+          >
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${isLoadingStorage ? "animate-spin" : ""}`}
+              strokeWidth={2.5}
+            />
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        {cleanMessage && (
+          <div className="p-3 bg-playful-mint/20 dark:bg-emerald-950/40 border-2 border-playful-dark dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 font-heading font-bold flex items-center space-x-2 shadow-pop-sm animate-in fade-in">
+            <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span>{cleanMessage}</span>
+          </div>
+        )}
+
+        {/* Drive Capacity Progress Bar */}
+        {storageStats && storageStats.totalDiskBytes > 0 && (
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm space-y-2.5">
+            <div className="flex items-center justify-between text-xs font-heading font-extrabold text-playful-dark dark:text-slate-200">
+              <div className="flex items-center space-x-2">
+                <span className="px-2 py-0.5 rounded-lg bg-playful-violet text-white text-[11px] border border-playful-dark">
+                  {storageStats.driveLetter} Drive
+                </span>
+                <span>Destination Storage Capacity</span>
+              </div>
+              <div className="text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+                <span className="font-bold text-playful-dark dark:text-white">
+                  {formatBytes(storageStats.freeDiskBytes)} free
+                </span>{" "}
+                of {formatBytes(storageStats.totalDiskBytes)} ({storageStats.diskUsagePercent}% used)
+              </div>
+            </div>
+
+            <div className="w-full bg-slate-200 dark:bg-[#161b22] h-3.5 rounded-full border-2 border-playful-dark dark:border-slate-700 overflow-hidden shadow-inner p-0.5">
+              <div
+                className={`h-full rounded-full transition-all duration-500 border border-playful-dark/30 ${
+                  storageStats.diskUsagePercent > 90
+                    ? "bg-rose-500"
+                    : storageStats.diskUsagePercent > 75
+                      ? "bg-playful-amber"
+                      : "bg-playful-mint"
+                }`}
+                style={{ width: `${Math.min(100, Math.max(2, storageStats.diskUsagePercent))}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* 3 Storage Footprint Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Media Library Size */}
+          <div className="p-3.5 rounded-2xl bg-playful-violet/10 dark:bg-violet-950/20 border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm space-y-1">
+            <div className="flex items-center space-x-1.5 text-xs font-heading font-extrabold text-playful-dark dark:text-slate-200 uppercase tracking-wider">
+              <Folder className="w-3.5 h-3.5 text-playful-violet dark:text-violet-400" />
+              <span>Media Library</span>
+            </div>
+            <div className="text-base font-heading font-extrabold text-playful-dark dark:text-white">
+              {storageStats ? formatBytes(storageStats.totalHistoryBytes) : "..."}
+            </div>
+            <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+              {storageStats?.totalHistoryCount || 0} files in download history
+            </p>
+          </div>
+
+          {/* App & Binaries Footprint */}
+          <div className="p-3.5 rounded-2xl bg-playful-mint/15 dark:bg-emerald-950/20 border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm space-y-1">
+            <div className="flex items-center space-x-1.5 text-xs font-heading font-extrabold text-playful-dark dark:text-slate-200 uppercase tracking-wider">
+              <Cpu className="w-3.5 h-3.5 text-playful-mint dark:text-emerald-400" />
+              <span>Engine Binaries</span>
+            </div>
+            <div className="text-base font-heading font-extrabold text-playful-dark dark:text-white">
+              {storageStats ? formatBytes(storageStats.appDataBytes) : "..."}
+            </div>
+            <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+              yt-dlp, FFmpeg & configs
+            </p>
+          </div>
+
+          {/* Temp Download Chunks */}
+          <div className="p-3.5 rounded-2xl bg-playful-amber/15 dark:bg-amber-950/20 border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm space-y-1">
+            <div className="flex items-center space-x-1.5 text-xs font-heading font-extrabold text-playful-dark dark:text-slate-200 uppercase tracking-wider">
+              <Database className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span>Temp Cache</span>
+            </div>
+            <div className="text-base font-heading font-extrabold text-playful-dark dark:text-white">
+              {storageStats ? formatBytes(storageStats.tempCacheBytes) : "0 B"}
+            </div>
+            <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+              Interrupted .part chunks
+            </p>
+          </div>
+        </div>
+
+        {/* 1-Click Clean Temp Cache Button */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm gap-3">
+          <div>
+            <h4 className="text-xs font-heading font-extrabold text-playful-dark dark:text-slate-200">
+              Temporary Cache & Chunk Cleaner
+            </h4>
+            <p className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
+              Purges orphan `.part` and `.ytdl` files left over from cancelled or interrupted downloads
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleCleanTempCache}
+            disabled={isCleaningCache}
+            className="candy-btn px-4 py-2 text-xs font-bold shrink-0 flex items-center space-x-1.5 bg-playful-pink text-white disabled:opacity-50"
+          >
+            <Trash2 className="w-3.5 h-3.5" strokeWidth={2.5} />
+            <span>{isCleaningCache ? "Cleaning..." : "Purge Temp Cache"}</span>
+          </button>
+        </div>
+
+        {/* Destination Path Selector */}
+        <div className="space-y-2 pt-2 border-t-2 border-playful-dark/10 dark:border-slate-800">
+          <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-playful-dark dark:text-slate-200">
+            Default Download Folder
+          </label>
+          <div className="flex items-center space-x-2">
+            <div className="flex-1 px-3.5 py-2.5 bg-slate-50 dark:bg-[#0d1117] border-2 border-playful-dark rounded-2xl text-xs font-mono font-medium text-playful-dark dark:text-slate-200 truncate shadow-pop-sm">
+              {settings.defaultDownloadPath}
+            </div>
+            <button
+              type="button"
+              onClick={handleBrowse}
+              className="candy-btn-secondary px-4 py-2.5 text-xs font-bold shrink-0"
+            >
+              Browse Folder...
+            </button>
+          </div>
         </div>
       </div>
 

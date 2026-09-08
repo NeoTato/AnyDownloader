@@ -38,6 +38,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   showInFolder: (filePath: string) =>
     ipcRenderer.invoke("show-in-folder", filePath),
 
+  // Storage & Disk Analytics
+  getStorageStats: () => ipcRenderer.invoke("get-storage-stats"),
+  cleanTempCache: () => ipcRenderer.invoke("clean-temp-cache"),
+
   // System & Clipboard
   readClipboard: () => ipcRenderer.invoke("read-clipboard"),
 });

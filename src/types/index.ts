@@ -148,6 +148,17 @@ export interface EngineStatus {
   };
 }
 
+export interface StorageStats {
+  totalHistoryBytes: number;
+  totalHistoryCount: number;
+  appDataBytes: number;
+  freeDiskBytes: number;
+  totalDiskBytes: number;
+  diskUsagePercent: number;
+  tempCacheBytes: number;
+  driveLetter: string;
+}
+
 export interface ElectronAPI {
   // Metadata & Engine
   inspectUrl: (
@@ -181,6 +192,10 @@ export interface ElectronAPI {
   showInFolder: (
     filePath: string,
   ) => Promise<{ success: boolean; error?: string; warning?: string }>;
+
+  // Storage & Disk Analytics
+  getStorageStats: () => Promise<StorageStats>;
+  cleanTempCache: () => Promise<{ cleanedBytes: number; deletedCount: number }>;
 
   // System / Clipboard
   readClipboard: () => Promise<string>;

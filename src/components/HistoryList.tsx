@@ -165,7 +165,7 @@ export const HistoryList: React.FC<HistoryListProps> = ({
             />
           </h2>
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-playful-violet text-white font-mono font-bold border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
-            {history.length}
+            {history.length} items
           </span>
           {missingCount > 0 && (
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-playful-amber dark:bg-amber-950/60 text-playful-dark dark:text-amber-300 font-bold border-2 border-playful-dark dark:border-amber-800 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] flex items-center space-x-1">
