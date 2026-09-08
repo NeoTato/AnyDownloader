@@ -18,7 +18,7 @@ import { AppStore } from "./store";
 import type { DownloadOptions } from "../src/types";
 
 process.env.DIST = path.join(__dirname, "../dist");
-process.env.VITE_PUBLIC = app.isPackaged
+process.env.VITE_PUBLIC = app?.isPackaged
   ? process.env.DIST
   : path.join(process.env.DIST, "../public");
 
@@ -30,8 +30,8 @@ const preload = path.join(__dirname, "preload.js");
 const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = path.join(process.env.DIST, "index.html");
 
-const binManager = new BinManager();
-const ytdlpRunner = new YtdlpRunner(binManager);
+let binManager: BinManager;
+let ytdlpRunner: YtdlpRunner;
 let appStore: AppStore;
 
 async function createWindow() {
@@ -128,6 +128,8 @@ app.whenReady().then(async () => {
     app.setAppUserModelId("com.anydownloader.app");
   }
   appStore = new AppStore();
+  binManager = new BinManager();
+  ytdlpRunner = new YtdlpRunner(binManager);
   await binManager.init();
 
   createTray();
