@@ -1,11 +1,10 @@
 import React from "react";
 import {
-  Search,
   ClipboardPaste,
   X,
   Loader2,
-  Globe2,
   Sparkles,
+  Link2,
 } from "lucide-react";
 
 interface UrlInputProps {
@@ -17,32 +16,14 @@ interface UrlInputProps {
 }
 
 const SUPPORTED_PLATFORMS = [
-  { name: "YouTube", color: "bg-red-500/10 text-red-400 border-red-500/20" },
-  { name: "TikTok", color: "bg-pink-500/10 text-pink-400 border-pink-500/20" },
-  {
-    name: "Facebook",
-    color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  },
-  {
-    name: "X / Twitter",
-    color: "bg-sky-500/10 text-sky-400 border-sky-500/20",
-  },
-  {
-    name: "Instagram",
-    color: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  },
-  {
-    name: "Reddit",
-    color: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  },
-  {
-    name: "SoundCloud",
-    color: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  },
-  {
-    name: "+1000 more",
-    color: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-  },
+  { name: "YouTube", bg: "bg-red-100 text-red-800" },
+  { name: "TikTok", bg: "bg-pink-100 text-pink-800" },
+  { name: "Instagram", bg: "bg-purple-100 text-purple-800" },
+  { name: "Facebook", bg: "bg-blue-100 text-blue-800" },
+  { name: "X / Twitter", bg: "bg-sky-100 text-sky-800" },
+  { name: "SoundCloud", bg: "bg-amber-100 text-amber-800" },
+  { name: "Reddit", bg: "bg-orange-100 text-orange-800" },
+  { name: "+1,000 sites", bg: "bg-emerald-100 text-emerald-800" },
 ];
 
 export const UrlInput: React.FC<UrlInputProps> = ({
@@ -63,56 +44,60 @@ export const UrlInput: React.FC<UrlInputProps> = ({
     <div className="w-full space-y-3">
       <form
         onSubmit={handleSubmit}
-        className="relative flex items-center"
+        className="relative"
       >
-        <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-            <Search className="w-5 h-5 text-indigo-400" />
+        <div className="sticker-card p-1.5 sm:p-2 flex items-center gap-2 bg-white transition-all focus-within:shadow-pop-lg focus-within:-translate-x-0.5 focus-within:-translate-y-0.5">
+          {/* Icon Circle */}
+          <div className="w-10 h-10 rounded-full bg-playful-muted border-2 border-playful-dark flex items-center justify-center text-playful-dark shrink-0 ml-1">
+            <Link2 className="w-5 h-5 text-playful-violet" strokeWidth={2.5} />
           </div>
 
+          {/* Text Input */}
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste media link here (e.g. YouTube, TikTok, Facebook, Twitter, Instagram...)"
-            className="w-full pl-12 pr-28 py-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 shadow-xl transition-all text-sm sm:text-base"
+            placeholder="Paste any media URL (YouTube, TikTok, Instagram, X...)"
+            className="flex-1 bg-transparent px-2 py-2 text-playful-dark placeholder-slate-400 font-sans font-medium text-sm sm:text-base outline-none min-w-0"
           />
 
-          <div className="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1.5">
+          {/* Clear or Paste Button */}
+          <div className="flex items-center space-x-1.5 shrink-0">
             {url ? (
               <button
                 type="button"
                 onClick={() => setUrl("")}
-                className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors"
+                className="p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors"
                 title="Clear input"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" strokeWidth={2.5} />
               </button>
             ) : (
               <button
                 type="button"
                 onClick={onPasteClipboard}
-                className="flex items-center space-x-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-medium border border-slate-700 transition-all shadow-sm"
-                title="Paste from clipboard"
+                className="candy-btn-secondary px-3 py-1.5 text-xs hidden sm:inline-flex"
+                title="Paste link from clipboard"
               >
-                <ClipboardPaste className="w-3.5 h-3.5 text-indigo-400" />
+                <ClipboardPaste className="w-3.5 h-3.5 mr-1 text-playful-violet" strokeWidth={2.5} />
                 <span>Paste</span>
               </button>
             )}
 
+            {/* Submit Candy Button */}
             <button
               type="submit"
               disabled={isInspecting || !url.trim()}
-              className="flex items-center space-x-1.5 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:opacity-50 disabled:pointer-events-none text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/25 transition-all"
+              className="candy-btn px-5 sm:px-6 py-2.5 text-sm"
             >
               {isInspecting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Fetching...</span>
+                  <Loader2 className="w-4 h-4 mr-1.5 animate-spin" strokeWidth={2.5} />
+                  <span>Analyzing...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4 mr-1.5 text-playful-yellow fill-playful-yellow" strokeWidth={2.5} />
                   <span>Analyze</span>
                 </>
               )}
@@ -121,16 +106,15 @@ export const UrlInput: React.FC<UrlInputProps> = ({
         </div>
       </form>
 
-      {/* Supported Platforms tags */}
-      <div className="flex flex-wrap items-center gap-1.5 pt-1">
-        <div className="flex items-center text-xs text-slate-400 mr-1">
-          <Globe2 className="w-3.5 h-3.5 mr-1 text-slate-500" />
-          <span>Supported:</span>
-        </div>
+      {/* Supported Platforms sticker chips */}
+      <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
+        <span className="text-[11px] font-heading font-extrabold text-slate-500 uppercase tracking-wider mr-1">
+          Supports:
+        </span>
         {SUPPORTED_PLATFORMS.map((platform) => (
           <span
             key={platform.name}
-            className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full border ${platform.color}`}
+            className={`text-[11px] font-heading font-bold px-2.5 py-0.5 rounded-full border-2 border-playful-dark shadow-pop-sm transition-transform hover:-translate-y-0.5 ${platform.bg}`}
           >
             {platform.name}
           </span>

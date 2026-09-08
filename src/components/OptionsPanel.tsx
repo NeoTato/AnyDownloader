@@ -3,12 +3,10 @@ import {
   Film,
   Music,
   Sparkles,
-  Folder,
   Image as ImageIcon,
   Tag,
   Subtitles,
   Download,
-  Info,
   Edit3,
   RotateCcw,
   Scissors,
@@ -42,7 +40,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
   media,
   defaultPath,
   settings,
-  onSelectFolder,
+  onSelectFolder: _onSelectFolder,
   onStartDownload,
 }) => {
   const [mode, setMode] = useState<MediaMode>(settings?.defaultMode || "video");
@@ -55,7 +53,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
     settings?.defaultVideoContainer || "mp4",
   );
   const [embedSubtitles, setEmbedSubtitles] = useState(false);
-  const [embedVideoThumbnail, setEmbedVideoThumbnail] = useState(true);
+  const embedVideoThumbnail = true;
 
   // Audio Options
   const [audioFormat, setAudioFormat] = useState<AudioFormat>(
@@ -73,9 +71,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
   );
 
   // Save Path
-  const [downloadPath, setDownloadPath] = useState<string>(
-    settings?.defaultDownloadPath || defaultPath,
-  );
+  const downloadPath: string = settings?.defaultDownloadPath || defaultPath;
 
   // Custom Filename
   const [customFilename, setCustomFilename] = useState<string>(media.title);
@@ -100,13 +96,6 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
     setMetaTitle(media.title);
     setMetaArtist(media.uploader || "");
   }, [media.title, media.durationString, media.uploader]);
-
-  const handleBrowseFolder = async () => {
-    const selected = await onSelectFolder();
-    if (selected) {
-      setDownloadPath(selected);
-    }
-  };
 
   // Helper: parse MM:SS or HH:MM:SS to seconds
   const parseTimeToSeconds = (str: string): number | null => {
@@ -216,42 +205,43 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
   ];
 
   return (
-    <div className="glass-panel p-6 rounded-3xl space-y-6 border border-slate-800 shadow-2xl">
+    <div className="sticker-card p-5 sm:p-6 space-y-6 bg-white border-2 border-playful-dark shadow-pop">
       {/* Mode Switcher Tabs */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-5">
         <div>
-          <h2 className="text-lg font-bold text-slate-100 flex items-center space-x-2">
+          <h2 className="text-lg font-heading font-extrabold text-playful-dark flex items-center space-x-2">
             <span>Download Configuration</span>
           </h2>
-          <p className="text-xs text-slate-400">
-            Choose output format, stream quality, and audio tagging options
+          <p className="text-xs font-medium text-playful-mutedFg">
+            Choose output stream format, audio bitrates, and album cover tags
           </p>
         </div>
 
-        <div className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700/80">
+        {/* Candy Mode Switcher */}
+        <div className="flex items-center bg-playful-muted p-1.5 rounded-full border-2 border-playful-dark shadow-pop-sm gap-1.5 self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setMode("video")}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs sm:text-sm font-heading font-extrabold transition-playful ${
               mode === "video"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-playful-violet text-white border-2 border-playful-dark shadow-pop-sm"
+                : "text-slate-700 hover:text-slate-900 hover:bg-slate-200/80"
             }`}
           >
-            <Film className="w-4 h-4" />
+            <Film className="w-4 h-4" strokeWidth={2.5} />
             <span>Video</span>
           </button>
 
           <button
             type="button"
             onClick={() => setMode("audio")}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs sm:text-sm font-heading font-extrabold transition-playful ${
               mode === "audio"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-playful-pink text-white border-2 border-playful-dark shadow-pop-sm"
+                : "text-slate-700 hover:text-slate-900 hover:bg-slate-200/80"
             }`}
           >
-            <Music className="w-4 h-4" />
+            <Music className="w-4 h-4" strokeWidth={2.5} />
             <span>Audio Only</span>
           </button>
         </div>
@@ -262,7 +252,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
         <div className="space-y-5">
           {/* Resolution selector */}
           <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-1.5">
+            <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 flex items-center space-x-1.5">
               <span>Target Resolution & Quality</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -271,14 +261,18 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   key={q.value}
                   type="button"
                   onClick={() => setVideoQuality(q.value)}
-                  className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
+                  className={`flex flex-col items-start p-3 rounded-2xl border-2 border-playful-dark text-left transition-playful ${
                     videoQuality === q.value
-                      ? "bg-indigo-600/20 border-indigo-500 text-white shadow-md shadow-indigo-500/10"
-                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900"
+                      ? "bg-playful-violet text-white shadow-pop"
+                      : "bg-playful-muted text-playful-dark shadow-pop-sm hover:bg-white hover:-translate-y-0.5"
                   }`}
                 >
-                  <span className="font-bold text-sm">{q.label}</span>
-                  <span className="text-[11px] text-slate-400 mt-0.5">
+                  <span className="font-heading font-extrabold text-sm">{q.label}</span>
+                  <span
+                    className={`text-[11px] font-medium mt-0.5 ${
+                      videoQuality === q.value ? "text-violet-200" : "text-slate-500"
+                    }`}
+                  >
                     {q.desc}
                   </span>
                 </button>
@@ -289,7 +283,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           {/* Container format */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
                 Container Format
               </label>
               <div className="flex gap-2">
@@ -298,10 +292,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     key={cnt}
                     type="button"
                     onClick={() => setVideoContainer(cnt)}
-                    className={`flex-1 py-2.5 px-3 rounded-xl border text-xs font-bold uppercase transition-all ${
+                    className={`flex-1 py-2.5 px-3 rounded-xl border-2 border-playful-dark text-xs font-heading font-extrabold uppercase transition-playful ${
                       videoContainer === cnt
-                        ? "bg-indigo-600/20 border-indigo-500 text-indigo-300"
-                        : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200"
+                        ? "bg-playful-yellow text-slate-900 shadow-pop"
+                        : "bg-white text-slate-600 shadow-pop-sm hover:bg-slate-50"
                     }`}
                   >
                     {cnt}
@@ -312,18 +306,18 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
             {/* Video Toggles */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
                 Additional Streams
               </label>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center space-x-2.5 cursor-pointer text-xs text-slate-300 bg-slate-900/60 p-2 rounded-xl border border-slate-800 hover:border-slate-700">
+                <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark bg-playful-muted p-2.5 rounded-xl border-2 border-playful-dark shadow-pop-sm hover:bg-white transition-colors">
                   <input
                     type="checkbox"
                     checked={embedSubtitles}
                     onChange={(e) => setEmbedSubtitles(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-800"
+                    className="w-4 h-4 rounded border-2 border-playful-dark text-playful-violet focus:ring-playful-violet accent-playful-violet"
                   />
-                  <Subtitles className="w-3.5 h-3.5 text-indigo-400" />
+                  <Subtitles className="w-4 h-4 text-playful-violet" strokeWidth={2.5} />
                   <span>Download & embed subtitles</span>
                 </label>
               </div>
@@ -335,7 +329,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
         <div className="space-y-5">
           {/* Audio Format Grid */}
           <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
               Audio Format
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -344,14 +338,18 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   key={f.value}
                   type="button"
                   onClick={() => setAudioFormat(f.value)}
-                  className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
+                  className={`flex flex-col items-start p-3 rounded-2xl border-2 border-playful-dark text-left transition-playful ${
                     audioFormat === f.value
-                      ? "bg-indigo-600/20 border-indigo-500 text-white shadow-md shadow-indigo-500/10"
-                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900"
+                      ? "bg-playful-pink text-white shadow-pop"
+                      : "bg-playful-muted text-playful-dark shadow-pop-sm hover:bg-white hover:-translate-y-0.5"
                   }`}
                 >
-                  <span className="font-bold text-sm">{f.label}</span>
-                  <span className="text-[11px] text-slate-400 mt-0.5">
+                  <span className="font-heading font-extrabold text-sm">{f.label}</span>
+                  <span
+                    className={`text-[11px] font-medium mt-0.5 ${
+                      audioFormat === f.value ? "text-pink-100" : "text-slate-500"
+                    }`}
+                  >
                     {f.desc}
                   </span>
                 </button>
@@ -362,7 +360,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           {/* Bitrate selection if MP3 or M4A */}
           {(audioFormat === "mp3" || audioFormat === "m4a") && (
             <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600">
                 Audio Bitrate Quality
               </label>
               <div className="flex gap-2">
@@ -376,10 +374,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     key={b.val}
                     type="button"
                     onClick={() => setAudioBitrate(b.val as AudioBitrate)}
-                    className={`flex-1 py-2 px-2 rounded-xl border text-xs font-semibold transition-all ${
+                    className={`flex-1 py-2 px-2 rounded-xl border-2 border-playful-dark text-xs font-heading font-extrabold transition-playful ${
                       audioBitrate === b.val
-                        ? "bg-indigo-600/20 border-indigo-500 text-indigo-300"
-                        : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200"
+                        ? "bg-playful-yellow text-slate-900 shadow-pop"
+                        : "bg-white text-slate-600 shadow-pop-sm hover:bg-slate-50"
                     }`}
                   >
                     {b.label}
@@ -390,25 +388,24 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           )}
 
           {/* Album Art / Cover Art Feature Toggle */}
-          <div className="p-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/20 space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-playful-yellow/10 border-2 border-playful-dark shadow-pop-sm space-y-3">
+            <div className="flex items-center justify-between gap-3">
               <div className="flex items-start space-x-3">
-                <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 mt-0.5">
-                  <ImageIcon className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-full bg-playful-yellow border-2 border-playful-dark flex items-center justify-center text-slate-950 shrink-0 shadow-pop-sm">
+                  <ImageIcon className="w-5 h-5" strokeWidth={2.5} />
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="font-bold text-sm text-slate-100">
-                      Embed Album Art / Thumbnail
+                    <span className="font-heading font-extrabold text-sm text-playful-dark">
+                      Embed Album Art / Cover Thumbnail
                     </span>
-                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300">
-                      Tagging
+                    <span className="text-[10px] uppercase font-heading font-extrabold px-2 py-0.5 rounded-full bg-playful-pink text-white border border-playful-dark shadow-pop-sm">
+                      ID3 Art
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Embed the video thumbnail as the cover artwork inside the{" "}
-                    {audioFormat.toUpperCase()} file for music players and
-                    smartphones.
+                  <p className="text-xs font-medium text-slate-600 mt-0.5">
+                    Embeds the high-resolution video thumbnail as album artwork inside the{" "}
+                    {audioFormat.toUpperCase()} file for music apps and smartphones.
                   </p>
                 </div>
               </div>
@@ -419,55 +416,55 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                 role="switch"
                 aria-checked={embedThumbnail}
                 onClick={() => setEmbedThumbnail(!embedThumbnail)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${
-                  embedThumbnail ? "bg-indigo-600" : "bg-slate-700"
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm ${
+                  embedThumbnail ? "bg-playful-violet" : "bg-slate-300"
                 }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white border-2 border-playful-dark shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
                     embedThumbnail ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
               </button>
             </div>
 
-            <div className="pt-2 border-t border-indigo-500/10 flex items-center justify-between">
-              <label className="flex items-center space-x-2 cursor-pointer text-xs text-slate-300">
+            <div className="pt-2 border-t-2 border-playful-dark/10 flex items-center justify-between">
+              <label className="flex items-center space-x-2 cursor-pointer text-xs font-heading font-bold text-playful-dark">
                 <input
                   type="checkbox"
                   checked={embedMetadata}
                   onChange={(e) => setEmbedMetadata(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-800"
+                  className="w-4 h-4 rounded border-2 border-playful-dark text-playful-violet focus:ring-playful-violet accent-playful-violet"
                 />
-                <Tag className="w-3.5 h-3.5 text-indigo-400" />
+                <Tag className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
                 <span>Auto-tag metadata (Artist, Title, Album tags)</span>
               </label>
 
               <button
                 type="button"
                 onClick={() => setShowMetadataEditor(!showMetadataEditor)}
-                className="flex items-center space-x-1 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+                className="flex items-center space-x-1 text-xs font-heading font-extrabold text-playful-violet hover:text-playful-violetHover transition-colors"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={2.5} />
                 <span>
                   {showMetadataEditor
                     ? "Hide Tag Editor"
                     : "Customize ID3 Tags"}
                 </span>
                 {showMetadataEditor ? (
-                  <ChevronUp className="w-3.5 h-3.5" />
+                  <ChevronUp className="w-3.5 h-3.5" strokeWidth={2.5} />
                 ) : (
-                  <ChevronDown className="w-3.5 h-3.5" />
+                  <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />
                 )}
               </button>
             </div>
 
             {/* Expandable ID3 Tag Customizer */}
             {showMetadataEditor && (
-              <div className="pt-3 border-t border-indigo-500/20 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs animate-in fade-in duration-200">
+              <div className="pt-3 border-t-2 border-playful-dark/10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs animate-in fade-in duration-200">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-slate-300 flex items-center space-x-1">
-                    <Music4 className="w-3 h-3 text-indigo-400" />
+                  <label className="text-[11px] font-heading font-bold text-playful-dark flex items-center space-x-1">
+                    <Music4 className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
                     <span>Track Title</span>
                   </label>
                   <input
@@ -475,13 +472,13 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     value={metaTitle}
                     onChange={(e) => setMetaTitle(e.target.value)}
                     placeholder="Track Title"
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-slate-300 flex items-center space-x-1">
-                    <Tag className="w-3 h-3 text-indigo-400" />
+                  <label className="text-[11px] font-heading font-bold text-playful-dark flex items-center space-x-1">
+                    <Tag className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
                     <span>Artist / Creator</span>
                   </label>
                   <input
@@ -489,13 +486,13 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     value={metaArtist}
                     onChange={(e) => setMetaArtist(e.target.value)}
                     placeholder="Artist Name"
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-slate-300 flex items-center space-x-1">
-                    <Disc className="w-3 h-3 text-indigo-400" />
+                  <label className="text-[11px] font-heading font-bold text-playful-dark flex items-center space-x-1">
+                    <Disc className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
                     <span>Album Name (Optional)</span>
                   </label>
                   <input
@@ -503,13 +500,13 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                     value={metaAlbum}
                     onChange={(e) => setMetaAlbum(e.target.value)}
                     placeholder="Album Name"
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-slate-300">
+                    <label className="text-[11px] font-heading font-bold text-playful-dark">
                       Year
                     </label>
                     <input
@@ -517,12 +514,12 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                       value={metaYear}
                       onChange={(e) => setMetaYear(e.target.value)}
                       placeholder="e.g. 2026"
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono"
+                      className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-mono font-bold text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] font-semibold text-slate-300">
+                    <label className="text-[11px] font-heading font-bold text-playful-dark">
                       Genre
                     </label>
                     <input
@@ -530,7 +527,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                       value={metaGenre}
                       onChange={(e) => setMetaGenre(e.target.value)}
                       placeholder="e.g. Pop, Rock"
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-medium text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
                     />
                   </div>
                 </div>
@@ -540,19 +537,19 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
         </div>
       )}
 
-      {/* Timestamp / Clip Trimming (Available for both Video and Audio) */}
-      <div className="space-y-3 pt-2 border-t border-slate-800">
+      {/* Timestamp / Clip Trimming */}
+      <div className="space-y-3 pt-4 border-t-2 border-slate-100">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
-              <Scissors className="w-4 h-4" />
+          <div className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded-full bg-playful-pink/20 border-2 border-playful-dark flex items-center justify-center text-slate-900 shadow-pop-sm">
+              <Scissors className="w-4 h-4 text-playful-dark" strokeWidth={2.5} />
             </div>
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+              <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-playful-dark">
                 Trim / Clip Section
               </span>
-              <p className="text-[11px] text-slate-400">
-                Download only a specific time segment instead of the full video
+              <p className="text-[11px] font-medium text-slate-500">
+                Download only a specific time range
               </p>
             </div>
           </div>
@@ -562,12 +559,12 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
             role="switch"
             aria-checked={clipEnabled}
             onClick={() => setClipEnabled(!clipEnabled)}
-            className={`relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-              clipEnabled ? "bg-indigo-600" : "bg-slate-700"
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-playful-dark transition-colors duration-200 ease-in-out focus:outline-none shadow-pop-sm ${
+              clipEnabled ? "bg-playful-pink" : "bg-slate-300"
             }`}
           >
             <span
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white border border-playful-dark shadow-sm transition duration-200 ease-in-out mt-0.5 ml-0.5 ${
                 clipEnabled ? "translate-x-5" : "translate-x-0"
               }`}
             />
@@ -576,16 +573,16 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
         {clipEnabled && (
           <div className="space-y-2.5">
-            <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in duration-200">
+            <div className="p-3.5 rounded-2xl bg-playful-muted border-2 border-playful-dark shadow-pop-sm grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in duration-200">
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-semibold text-slate-400">
+                  <label className="text-[11px] font-heading font-bold text-playful-dark">
                     Start Time (MM:SS)
                   </label>
                   <button
                     type="button"
                     onClick={() => setClipStart("00:00")}
-                    className="text-[10px] text-indigo-400 hover:text-indigo-300 font-semibold"
+                    className="text-[10px] font-heading font-extrabold text-playful-violet hover:underline"
                   >
                     Start (00:00)
                   </button>
@@ -595,20 +592,20 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   value={clipStart}
                   onChange={(e) => setClipStart(e.target.value)}
                   placeholder="00:00"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-mono font-bold text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
                 />
               </div>
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-semibold text-slate-400">
+                  <label className="text-[11px] font-heading font-bold text-playful-dark">
                     End Time (MM:SS)
                   </label>
                   {media.durationString && (
                     <button
                       type="button"
                       onClick={() => setClipEnd(media.durationString!)}
-                      className="text-[10px] text-indigo-400 hover:text-indigo-300 font-semibold"
+                      className="text-[10px] font-heading font-extrabold text-playful-violet hover:underline"
                     >
                       End ({media.durationString})
                     </button>
@@ -619,22 +616,22 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                   value={clipEnd}
                   onChange={(e) => setClipEnd(e.target.value)}
                   placeholder={media.durationString || "00:00"}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-white border-2 border-playful-dark rounded-xl text-xs font-mono font-bold text-playful-dark focus:outline-none focus:ring-2 focus:ring-playful-violet"
                 />
               </div>
             </div>
 
             {/* Validation Error Alert */}
             {clipError && (
-              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center justify-between text-xs animate-in fade-in duration-150">
-                <div className="flex items-center space-x-1.5">
-                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                  <span>{clipError}</span>
+              <div className="p-3 rounded-2xl bg-rose-100 border-2 border-playful-dark shadow-pop-sm text-rose-900 flex items-center justify-between text-xs animate-in fade-in duration-150">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" strokeWidth={2.5} />
+                  <span className="font-heading font-bold">{clipError}</span>
                 </div>
                 <button
                   type="button"
                   onClick={handleResetClipRange}
-                  className="text-[11px] font-semibold text-rose-300 hover:text-white underline shrink-0 ml-2"
+                  className="text-[11px] font-heading font-extrabold text-rose-900 hover:underline shrink-0 ml-2"
                 >
                   Reset Range
                 </button>
@@ -645,27 +642,27 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
       </div>
 
       {/* Output Filename (Editable & Sanitized) */}
-      <div className="space-y-2 pt-2 border-t border-slate-800">
+      <div className="space-y-2 pt-4 border-t-2 border-slate-100">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-1.5">
-            <Edit3 className="w-3.5 h-3.5 text-indigo-400" />
+          <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 flex items-center space-x-1.5">
+            <Edit3 className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
             <span>Output Filename</span>
           </label>
 
           <div className="flex items-center space-x-2">
             {customFilename.length > 100 && (
-              <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 font-medium">
-                Long title: will be safely trimmed
+              <span className="text-[10px] text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full border border-playful-dark font-heading font-bold">
+                Long title: will auto-trim safely
               </span>
             )}
             {customFilename !== media.title && (
               <button
                 type="button"
                 onClick={() => setCustomFilename(media.title)}
-                className="flex items-center space-x-1 text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold"
+                className="flex items-center space-x-1 text-[11px] text-playful-violet hover:underline font-heading font-extrabold"
                 title="Reset to original video title"
               >
-                <RotateCcw className="w-3 h-3" />
+                <RotateCcw className="w-3 h-3" strokeWidth={2.5} />
                 <span>Reset</span>
               </button>
             )}
@@ -678,40 +675,20 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
             value={customFilename}
             onChange={(e) => setCustomFilename(e.target.value)}
             placeholder="Enter custom file name..."
-            className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-medium"
+            className="w-full px-3.5 py-2.5 bg-playful-muted border-2 border-playful-dark rounded-xl text-xs sm:text-sm font-heading font-bold text-playful-dark placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-playful-violet"
           />
         </div>
       </div>
 
-      {/* Destination Folder Selector */}
-      <div className="space-y-2 pt-2 border-t border-slate-800">
-        <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-1">
-          <Folder className="w-3.5 h-3.5 text-indigo-400" />
-          <span>Save Destination Folder</span>
-        </label>
-        <div className="flex items-center space-x-2">
-          <div className="flex-1 px-3.5 py-2.5 bg-slate-900/80 border border-slate-800 rounded-xl text-xs font-mono text-slate-300 truncate">
-            {downloadPath || defaultPath || "Default Downloads Folder"}
-          </div>
-          <button
-            type="button"
-            onClick={handleBrowseFolder}
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-semibold border border-slate-700 transition-all shrink-0"
-          >
-            Browse...
-          </button>
-        </div>
-      </div>
-
-      {/* Action Download Button */}
+      {/* Action Candy Download Button */}
       <div className="pt-2">
         <button
           type="button"
           onClick={handleSubmitDownload}
           disabled={!!clipError}
-          className="w-full py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 disabled:pointer-events-none text-white rounded-2xl font-bold text-base shadow-xl shadow-indigo-600/30 flex items-center justify-center space-x-2.5 transition-all transform active:scale-[0.99]"
+          className="candy-btn w-full py-4 text-base sm:text-lg shadow-pop-lg hover:shadow-pop-xl"
         >
-          <Download className="w-5 h-5" />
+          <Download className="w-5 h-5 mr-2" strokeWidth={2.5} />
           <span>
             {clipError
               ? clipError
@@ -719,7 +696,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                 ? `Download Video (${videoQuality === "best" ? "Lossless Best" : videoQuality + "p"} ${videoContainer.toUpperCase()}${clipEnabled ? " • Trimmed" : ""})`
                 : `Extract Audio (${audioFormat.toUpperCase()}${audioFormat === "mp3" ? ` ${audioBitrate}k` : ""}${embedThumbnail ? " + Cover Art" : ""}${clipEnabled ? " • Trimmed" : ""})`}
           </span>
-          <Sparkles className="w-4 h-4 text-yellow-300" />
+          <Sparkles className="w-4 h-4 ml-2 text-playful-yellow fill-playful-yellow" strokeWidth={2.5} />
         </button>
       </div>
     </div>

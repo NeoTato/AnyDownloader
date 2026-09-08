@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { UrlInput } from "./components/UrlInput";
 import { MediaPreview } from "./components/MediaPreview";
@@ -10,12 +10,7 @@ import { HistoryList } from "./components/HistoryList";
 import { SettingsModal } from "./components/SettingsModal";
 import { useDownloader } from "./hooks/useDownloader";
 import {
-  ShieldCheck,
-  Zap,
   Sparkles,
-  Music2,
-  Film,
-  CheckCircle2,
   HardDriveDownload,
 } from "lucide-react";
 
@@ -92,7 +87,6 @@ export function App() {
       startDownload(item);
     }
     setActiveTab("queue");
-    setMediaInfo(null);
   };
 
   const activeQueueCount = activeDownloads.filter(
@@ -103,7 +97,7 @@ export function App() {
   ).length;
 
   return (
-    <div className="h-screen bg-[#0b0f19] flex flex-col text-slate-100 font-sans select-none overflow-hidden">
+    <div className="h-screen bg-playful-cream flex flex-col text-playful-dark font-sans select-none overflow-hidden">
       {/* App Header */}
       <Header
         activeTab={activeTab}
@@ -113,25 +107,22 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+        <div className="max-w-4xl mx-auto space-y-6">
           {activeTab === "downloader" && (
             <div className="space-y-6">
               {/* Hero Banner if nothing loaded yet */}
               {!mediaInfo && !isInspecting && (
-                <div className="text-center space-y-3 pt-4 pb-2">
-                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold">
-                    <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                <div className="text-center space-y-2.5 pt-2 pb-1">
+                  <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-playful-amber border-2 border-playful-dark shadow-pop-sm text-playful-dark text-xs font-bold rotate-[-1deg]">
+                    <Sparkles className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
                     <span>Next-Gen Offline Media Extractor</span>
                   </div>
-                  <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-indigo-200 bg-clip-text text-transparent">
+                  <h1 className="text-2xl sm:text-4xl font-heading font-extrabold tracking-tight text-playful-dark">
                     Download Any Video or Audio in True Quality
                   </h1>
-                  <p className="text-sm text-slate-400 max-w-xl mx-auto">
-                    Bypass ad-filled websites and low-bitrate compression.
-                    Extract lossless video up to 4K/8K and pristine
-                    320kbps/lossless audio with cover art directly on your
-                    computer.
+                  <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto font-medium">
+                    Extract lossless 4K/8K video and pristine 320kbps audio with cover art directly on your computer.
                   </p>
                 </div>
               )}
@@ -170,7 +161,7 @@ export function App() {
                     defaultPath={settings?.defaultDownloadPath || ""}
                     onSelectFolder={selectDownloadFolder}
                     onStartBatchDownload={handleStartBatchDownload}
-                    onCancel={() => setMediaInfo(null)}
+                    onCancel={() => {}}
                   />
                 ) : (
                   <OptionsPanel
@@ -181,50 +172,6 @@ export function App() {
                     onStartDownload={handleStartDownloadAndSwitch}
                   />
                 ))}
-
-              {/* Feature Highlights cards */}
-              {!mediaInfo && !isInspecting && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-slate-800/80">
-                  <div className="glass-panel p-4 rounded-2xl border border-slate-800 space-y-2">
-                    <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
-                      <Film className="w-4 h-4" />
-                    </div>
-                    <h3 className="text-sm font-bold text-slate-200">
-                      Lossless Remuxing
-                    </h3>
-                    <p className="text-xs text-slate-400">
-                      Merges original 1080p, 2K, and 4K DASH video streams with
-                      the best audio track with zero re-encoding loss.
-                    </p>
-                  </div>
-
-                  <div className="glass-panel p-4 rounded-2xl border border-slate-800 space-y-2">
-                    <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                      <Music2 className="w-4 h-4" />
-                    </div>
-                    <h3 className="text-sm font-bold text-slate-200">
-                      Audio + Album Art
-                    </h3>
-                    <p className="text-xs text-slate-400">
-                      Extract crystal clear MP3 (320 kbps), M4A, or FLAC with
-                      custom toggle to embed high-res cover art.
-                    </p>
-                  </div>
-
-                  <div className="glass-panel p-4 rounded-2xl border border-slate-800 space-y-2">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                      <ShieldCheck className="w-4 h-4" />
-                    </div>
-                    <h3 className="text-sm font-bold text-slate-200">
-                      100% Offline & Private
-                    </h3>
-                    <p className="text-xs text-slate-400">
-                      Runs entirely on your local machine. No shady websites, no
-                      data collection, no download throttles.
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -266,23 +213,22 @@ export function App() {
       </main>
 
       {/* Bottom Bar Status */}
-      <footer className="w-full border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-sm px-6 py-2.5 text-xs text-slate-400 flex items-center justify-between">
+      <footer className="w-full border-t-2 border-playful-dark bg-white px-6 py-2 text-xs text-playful-dark flex items-center justify-between font-medium">
         <div className="flex items-center space-x-2">
-          <HardDriveDownload className="w-3.5 h-3.5 text-indigo-400" />
+          <HardDriveDownload className="w-3.5 h-3.5 text-playful-violet" strokeWidth={2.5} />
           <span className="font-mono text-[11px] truncate max-w-sm">
             Save Path: {settings?.defaultDownloadPath || "Standard Downloads"}
           </span>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <span className="text-[11px] text-slate-400">
-            Engine:{" "}
-            {engineStatus?.ytdlp?.available
-              ? "yt-dlp Ready"
-              : "Initializing Engine"}
+        <div className="flex items-center space-x-3 text-[11px]">
+          <span className="flex items-center space-x-1">
+            <span className="w-2 h-2 rounded-full bg-playful-mint border border-playful-dark"></span>
+            <span>yt-dlp {engineStatus?.ytdlp?.available ? "Ready" : "Loading"}</span>
           </span>
-          <span className="text-[11px] text-slate-400">
-            FFmpeg: {engineStatus?.ffmpeg?.available ? "Active" : "Available"}
+          <span className="flex items-center space-x-1">
+            <span className="w-2 h-2 rounded-full bg-playful-violet border border-playful-dark"></span>
+            <span>FFmpeg {engineStatus?.ffmpeg?.available ? "Active" : "Path"}</span>
           </span>
         </div>
       </footer>

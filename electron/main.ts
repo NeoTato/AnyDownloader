@@ -11,6 +11,7 @@ import {
   nativeImage,
 } from "electron";
 import path from "node:path";
+import fs from "node:fs";
 import { BinManager } from "./binManager";
 import { YtdlpRunner } from "./ytdlpRunner";
 import { AppStore } from "./store";

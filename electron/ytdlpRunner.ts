@@ -1,4 +1,3 @@
-import { spawn, ChildProcess } from "node:child_process";
 import { spawn, exec, ChildProcess } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
@@ -12,7 +11,6 @@ import type {
 
 export class YtdlpRunner {
   private binManager: BinManager;
-  private activeProcesses: Map<string, ChildProcess> = new Map();
   private activeProcesses: Map<
     string,
     { child: ChildProcess; cancel: () => void }
@@ -326,7 +324,6 @@ export class YtdlpRunner {
     let finalFilePath: string | undefined;
     let isCancelled = false;
     const child = spawn(ytdlp, args);
-    this.activeProcesses.set(options.id, child);
 
     const cancel = () => {
       if (isCancelled) return;
@@ -469,24 +466,19 @@ export class YtdlpRunner {
 
         onComplete(historyItem);
       } else {
-        if (progressState.status !== "cancelled") {
+        if (!isCancelled) {
           progressState.status = "error";
           progressState.error =
             stderrBuffer.trim() || `Download failed with exit code ${code}`;
           onProgress({ ...progressState });
           onError(progressState.error);
         }
-        progressState.status = "error";
-        progressState.error =
-          stderrBuffer.trim() || `Download failed with exit code ${code}`;
-        onProgress({ ...progressState });
-        onError(progressState.error);
       }
     });
 
     child.on("error", (err) => {
       this.activeProcesses.delete(options.id);
-      if (isCancelled || progressState.status === "cancelled") {
+      if (isCancelled) {
         return;
       }
       progressState.status = "error";
@@ -496,23 +488,11 @@ export class YtdlpRunner {
     });
 
     return {
-      cancel: () => {
-        progressState.status = "cancelled";
-        progressState.phase = "Cancelled by user";
-        onProgress({ ...progressState });
-        if (child) {
-          child.kill("SIGTERM");
-        }
-        this.activeProcesses.delete(options.id);
-      },
       cancel,
     };
   }
 
   public cancelDownload(id: string): boolean {
-    const child = this.activeProcesses.get(id);
-    if (child) {
-      child.kill("SIGTERM");
     const entry = this.activeProcesses.get(id);
     if (entry) {
       entry.cancel();

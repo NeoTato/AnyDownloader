@@ -11,7 +11,6 @@ export class BinManager {
   public ffmpegPath: string | null = null;
 
   constructor() {
-    const isDev = !app.isPackaged;
     this.binDir = path.join(app.getPath("userData"), "bin");
     if (!fs.existsSync(this.binDir)) {
       fs.mkdirSync(this.binDir, { recursive: true });

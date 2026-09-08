@@ -14,6 +14,7 @@ import {
   RefreshCw,
   X,
   Info,
+  Sparkles,
 } from "lucide-react";
 import type { HistoryItem } from "../types";
 
@@ -94,17 +95,16 @@ export const HistoryList: React.FC<HistoryListProps> = ({
 
   if (history.length === 0) {
     return (
-      <div className="glass-panel p-12 rounded-3xl border border-slate-800 text-center space-y-4 max-w-xl mx-auto my-8">
-        <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto border border-indigo-500/20">
-          <History className="w-8 h-8 opacity-60" />
+      <div className="sticker-card p-10 text-center space-y-4 max-w-md mx-auto my-8">
+        <div className="w-16 h-16 rounded-2xl bg-playful-amber/20 text-playful-dark flex items-center justify-center mx-auto border-2 border-playful-dark shadow-pop-sm rotate-[-3deg]">
+          <History className="w-8 h-8" strokeWidth={2.5} />
         </div>
-        <div className="space-y-1">
-          <h3 className="font-bold text-lg text-slate-200">
-            No download history
+        <div className="space-y-1.5">
+          <h3 className="font-heading font-extrabold text-xl text-playful-dark">
+            No download history yet!
           </h3>
-          <p className="text-sm text-slate-400">
-            Downloaded media will appear here for easy playback, location
-            tracking, and quick access to your local files.
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Your downloaded tracks and videos will show up here for easy playback, location tracking, and 1-click folder access.
           </p>
         </div>
       </div>
@@ -116,41 +116,44 @@ export const HistoryList: React.FC<HistoryListProps> = ({
       {/* Notice Banner */}
       {notice && (
         <div
-          className={`p-3.5 rounded-2xl flex items-center justify-between text-xs font-medium border animate-in fade-in transition-all ${
+          className={`p-3.5 rounded-2xl flex items-center justify-between text-xs font-bold border-2 border-playful-dark shadow-pop-sm animate-in fade-in transition-all ${
             notice.type === "warning"
-              ? "bg-amber-500/10 border-amber-500/30 text-amber-300"
+              ? "bg-playful-amber text-playful-dark"
               : notice.type === "info"
-                ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-300"
-                : "bg-rose-500/10 border-rose-500/30 text-rose-300"
+                ? "bg-playful-mint text-playful-dark"
+                : "bg-playful-pink text-playful-dark"
           }`}
         >
           <div className="flex items-center space-x-2.5">
             {notice.type === "warning" ? (
-              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+              <AlertTriangle className="w-4 h-4 shrink-0" strokeWidth={2.5} />
             ) : (
-              <Info className="w-4 h-4 text-indigo-400 shrink-0" />
+              <Info className="w-4 h-4 shrink-0" strokeWidth={2.5} />
             )}
             <span>{notice.message}</span>
           </div>
           <button
             onClick={() => setNotice(null)}
-            className="p-1 hover:bg-white/10 rounded-lg transition-colors ml-2"
+            className="p-1 hover:bg-black/10 rounded-lg transition-colors ml-2"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-4 h-4" strokeWidth={2.5} />
           </button>
         </div>
       )}
 
       {/* Search & Header Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="flex items-center space-x-2">
-          <h2 className="text-xl font-bold text-slate-100">Download History</h2>
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-mono font-bold">
+        <div className="flex items-center space-x-2.5">
+          <h2 className="text-xl font-heading font-extrabold text-playful-dark flex items-center gap-2">
+            <span>Download History</span>
+            <Sparkles className="w-4 h-4 text-playful-violet" strokeWidth={2.5} />
+          </h2>
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-playful-violet text-white font-mono font-bold border-2 border-playful-dark shadow-pop-sm">
             {history.length}
           </span>
           {missingCount > 0 && (
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-medium flex items-center space-x-1">
-              <AlertTriangle className="w-3 h-3" />
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-playful-amber text-playful-dark font-bold border-2 border-playful-dark shadow-pop-sm flex items-center space-x-1">
+              <AlertTriangle className="w-3.5 h-3.5 text-playful-dark" strokeWidth={2.5} />
               <span>{missingCount} missing</span>
             </span>
           )}
@@ -158,15 +161,15 @@ export const HistoryList: React.FC<HistoryListProps> = ({
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Mode filters */}
-          <div className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+          <div className="flex items-center bg-white p-1 rounded-2xl border-2 border-playful-dark shadow-pop-sm text-xs">
             {(["all", "video", "audio"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => setFilterMode(m)}
-                className={`px-3 py-1 rounded-lg font-semibold uppercase transition-all ${
+                className={`px-3 py-1 rounded-xl font-bold uppercase transition-all ${
                   filterMode === m
-                    ? "bg-indigo-600 text-white shadow-sm"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-playful-violet text-white border-2 border-playful-dark shadow-pop-sm"
+                    : "text-slate-600 hover:text-playful-dark"
                 }`}
               >
                 {m}
@@ -178,10 +181,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold border border-slate-700 transition-all"
+              className="p-2 bg-white hover:bg-slate-50 text-playful-dark rounded-xl text-xs font-bold border-2 border-playful-dark shadow-pop-sm hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
               title="Refresh history and check file status"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-4 h-4" strokeWidth={2.5} />
             </button>
           )}
 
@@ -189,10 +192,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
           {missingCount > 0 && onCleanMissing && (
             <button
               onClick={onCleanMissing}
-              className="flex items-center space-x-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-xl text-xs font-semibold border border-amber-500/20 transition-all"
+              className="flex items-center space-x-1.5 px-3 py-1.5 bg-playful-amber hover:brightness-105 text-playful-dark rounded-xl text-xs font-bold border-2 border-playful-dark shadow-pop-sm hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
               title="Remove deleted or moved files from history"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3.5 h-3.5" strokeWidth={2.5} />
               <span className="hidden sm:inline">
                 Clean Missing ({missingCount})
               </span>
@@ -202,10 +205,10 @@ export const HistoryList: React.FC<HistoryListProps> = ({
           {/* Clear All button */}
           <button
             onClick={onClearHistory}
-            className="flex items-center space-x-1 px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 rounded-xl text-xs font-semibold border border-rose-500/20 transition-all"
+            className="flex items-center space-x-1 px-3 py-1.5 bg-playful-pink/20 hover:bg-playful-pink text-playful-dark rounded-xl text-xs font-bold border-2 border-playful-dark shadow-pop-sm hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
             title="Clear all history"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-3.5 h-3.5" strokeWidth={2.5} />
             <span className="hidden sm:inline">Clear All</span>
           </button>
         </div>
@@ -213,13 +216,13 @@ export const HistoryList: React.FC<HistoryListProps> = ({
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" strokeWidth={2.5} />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search downloaded media by title or format..."
-          className="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+          className="w-full pl-11 pr-4 py-2.5 bg-white border-2 border-playful-dark rounded-2xl text-xs sm:text-sm text-playful-dark placeholder-slate-400 font-medium shadow-pop-sm focus:outline-none focus:border-playful-violet transition-colors"
         />
       </div>
 
@@ -240,15 +243,15 @@ export const HistoryList: React.FC<HistoryListProps> = ({
           return (
             <div
               key={item.id}
-              className={`glass-panel p-4 rounded-2xl border transition-all shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+              className={`p-4 rounded-2xl border-2 border-playful-dark transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
                 isMissing
-                  ? "border-amber-500/30 bg-amber-500/[0.02] hover:border-amber-500/50"
-                  : "border-slate-800/80 hover:border-slate-700/80"
+                  ? "bg-amber-50/80 shadow-pop-amber"
+                  : "bg-white shadow-pop hover:-translate-y-0.5"
               }`}
             >
               <div className="flex items-center space-x-3.5 min-w-0 flex-1">
                 {/* Thumbnail */}
-                <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-slate-950 shrink-0 border border-slate-800">
+                <div className="relative w-16 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border-2 border-playful-dark shadow-pop-sm">
                   {item.thumbnail ? (
                     <img
                       src={item.thumbnail}
@@ -256,16 +259,16 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                       className={`w-full h-full object-cover ${isMissing ? "opacity-60 grayscale-[40%]" : ""}`}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-600">
+                    <div className="w-full h-full flex items-center justify-center text-playful-dark">
                       {item.mode === "video" ? (
-                        <Film className="w-5 h-5" />
+                        <Film className="w-5 h-5 text-playful-violet" strokeWidth={2.5} />
                       ) : (
-                        <Music className="w-5 h-5" />
+                        <Music className="w-5 h-5 text-playful-pink" strokeWidth={2.5} />
                       )}
                     </div>
                   )}
 
-                  <div className="absolute bottom-0.5 right-0.5 px-1 py-0.2 rounded bg-black/80 text-[8px] font-bold uppercase text-white">
+                  <div className="absolute bottom-0.5 right-0.5 px-1 py-0.2 rounded bg-playful-dark text-[8px] font-extrabold uppercase text-white">
                     {item.mode}
                   </div>
                 </div>
@@ -274,34 +277,34 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                 <div className="min-w-0 flex-1 space-y-1">
                   <div className="flex items-center space-x-2">
                     <h4
-                      className={`font-bold text-sm line-clamp-1 ${
-                        isMissing ? "text-slate-300" : "text-slate-200"
+                      className={`font-heading font-extrabold text-sm line-clamp-1 ${
+                        isMissing ? "text-slate-600" : "text-playful-dark"
                       }`}
                     >
                       {item.title}
                     </h4>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-400">
-                    <span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 font-mono font-bold text-[10px] border border-indigo-500/20">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs text-slate-600">
+                    <span className="px-2 py-0.5 rounded-lg bg-playful-violet/10 text-playful-violet font-mono font-bold text-[10px] border border-playful-dark">
                       {item.format} {item.quality}
                     </span>
 
                     {item.fileSize && (
-                      <span className="flex items-center space-x-1 text-[11px] font-mono text-slate-400">
-                        <HardDrive className="w-3 h-3 text-slate-500" />
+                      <span className="flex items-center space-x-1 text-[11px] font-mono text-slate-600">
+                        <HardDrive className="w-3 h-3 text-slate-500" strokeWidth={2.5} />
                         <span>{item.fileSize}</span>
                       </span>
                     )}
 
-                    <span className="flex items-center space-x-1 text-[11px] text-slate-500">
-                      <Calendar className="w-3 h-3" />
+                    <span className="flex items-center space-x-1 text-[11px] text-slate-500 font-medium">
+                      <Calendar className="w-3 h-3" strokeWidth={2.5} />
                       <span>{dateStr}</span>
                     </span>
 
                     {isMissing && (
-                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 font-semibold text-[10px] border border-amber-500/20">
-                        <AlertTriangle className="w-3 h-3 text-amber-400" />
+                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-lg bg-playful-amber text-playful-dark font-bold text-[10px] border border-playful-dark">
+                        <AlertTriangle className="w-3 h-3 text-playful-dark" strokeWidth={2.5} />
                         <span>File Missing / Moved</span>
                       </span>
                     )}
@@ -310,13 +313,13 @@ export const HistoryList: React.FC<HistoryListProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center space-x-1.5 self-end sm:self-center shrink-0">
+              <div className="flex items-center space-x-2 self-end sm:self-center shrink-0">
                 <button
                   onClick={() => handlePlay(item)}
-                  className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border-2 border-playful-dark transition-all ${
                     isMissing
-                      ? "bg-slate-800/50 text-slate-500 border-slate-800 hover:border-amber-500/40 hover:text-amber-300"
-                      : "bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border-slate-700"
+                      ? "bg-slate-100 text-slate-400 hover:text-playful-dark"
+                      : "candy-btn text-white"
                   }`}
                   title={
                     isMissing
@@ -325,39 +328,40 @@ export const HistoryList: React.FC<HistoryListProps> = ({
                   }
                 >
                   <ExternalLink
-                    className={`w-3.5 h-3.5 ${isMissing ? "text-slate-500" : "text-indigo-400"}`}
+                    className="w-3.5 h-3.5"
+                    strokeWidth={2.5}
                   />
                   <span>Play</span>
                 </button>
 
                 <button
                   onClick={() => handleFolder(item)}
-                  className="p-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl border border-slate-700 transition-all"
+                  className="p-2 bg-white hover:bg-slate-50 text-playful-dark rounded-xl border-2 border-playful-dark shadow-pop-sm hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
                   title={
                     isMissing
                       ? "Open destination folder location"
                       : "Open folder location"
                   }
                 >
-                  <Folder className="w-4 h-4 text-slate-400" />
+                  <Folder className="w-4 h-4 text-playful-dark" strokeWidth={2.5} />
                 </button>
 
                 {onRedownload && (
                   <button
                     onClick={() => onRedownload(item.url)}
-                    className="p-1.5 bg-slate-800/80 hover:bg-indigo-500/20 text-slate-400 hover:text-indigo-300 rounded-xl border border-slate-700 transition-all"
+                    className="p-2 bg-white hover:bg-playful-mint/20 text-playful-dark rounded-xl border-2 border-playful-dark shadow-pop-sm hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
                     title="Re-open link in Downloader to download again"
                   >
-                    <RotateCcw className="w-4 h-4" />
+                    <RotateCcw className="w-4 h-4 text-playful-dark" strokeWidth={2.5} />
                   </button>
                 )}
 
                 <button
                   onClick={() => onDeleteItem(item.id)}
-                  className="p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-300 rounded-xl transition-all"
+                  className="p-2 bg-white hover:bg-playful-pink/20 text-playful-dark rounded-xl border-2 border-playful-dark shadow-pop-sm hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all"
                   title="Delete from history"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-4 text-slate-600 hover:text-playful-dark" strokeWidth={2.5} />
                 </button>
               </div>
             </div>
