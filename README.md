@@ -1,4 +1,4 @@
-# 📼 AnyDownloader — Lossless Offline Media Engine
+# AnyDownloader — Lossless Offline Media Engine
 
 <p align="center">
   <img src="public/icon.svg" width="128" height="128" alt="AnyDownloader Icon" />
