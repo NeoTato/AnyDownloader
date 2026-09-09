@@ -20,7 +20,7 @@
 
 ---
 
-## 📥 Downloads & Installation
+## Downloads & Installation
 
 You can download the latest pre-built Windows binaries from the **[GitHub Releases](https://github.com/NeoTato/AnyDownloader/releases)** page:
 
@@ -31,42 +31,37 @@ You can download the latest pre-built Windows binaries from the **[GitHub Releas
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-### 🎬 1. Lossless Video & High-Fidelity Audio
+### 1. Lossless Video & High-Fidelity Audio
 - **True Direct Remuxing**: Fetches uncompressed video and audio streams and merges them locally using **FFmpeg stream copy** (0% re-encoding quality degradation).
 - **Video Qualities**: Best / 4K (2160p) / 2K (1440p) / 1080p FHD / 720p HD (MP4, MKV, WebM).
 - **Audio Formats**: MP3 (up to 320 kbps), FLAC (Lossless), M4A / AAC, OPUS (Native stream copy), and WAV.
 
-### 🎨 2. ID3 Album Artwork & Metadata Customizer
+### 2. ID3 Album Artwork & Metadata Customizer
 - **Cover Art Embedding**: Embeds high-resolution video thumbnails as album artwork directly inside MP3/M4A audio files for display in music players and smartphones.
 - **Custom ID3 Tag Editor**: Edit Title, Artist, Album, Release Year, and Genre before downloading.
 
-### ✂️ 3. Timestamp Trimming / Clip Section
+### 3. Timestamp Trimming / Clip Section
 - Download only specific segments of long videos, concerts, or podcasts with custom `Start Time` and `End Time` inputs (MM:SS / HH:MM:SS format).
 
-### 📑 4. Playlist & Batch Extractor
+### 4. Playlist & Batch Extractor
 - Detects playlists, albums, and multi-video links automatically.
 - **Live Search & Filters**: Search tracks inside large playlists and filter by **All**, **Selected**, or **Unselected**.
 
-### 📊 5. Storage Analytics & Temp Cache Cleaner
+### 5. Storage Analytics & Temp Cache Cleaner
 - **Drive Free Space Bar**: Live capacity monitor for your download destination drive.
 - **Media Library Footprint**: Tracks total downloaded size and file count.
 - **1-Click Temp Cache Purge**: Safely removes orphan `.part` or `.ytdl` files left over from interrupted downloads.
 
-### 🌙 6. Midnight Dark Playful UI
-- **Obsidian Dark Mode by default** (`#0D1117`) with vibrant candy pop badges and tactile pop-shadows.
-- **1-Click Sun ☀️ / Moon 🌙 Toggle** in the header for instant theme switching.
-- **Full-Card Clickable Toggles** for seamless and responsive navigation.
-
-### 🔔 7. Desktop Integration & Offline Binaries
+### 6. Desktop Integration & Offline Binaries
 - Windows native completion notifications and System Tray minimization.
 - Automatic clipboard URL detection.
 - Self-managed offline binaries for `yt-dlp` and `FFmpeg` with a 1-click in-app updater in Settings.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Lucide Icons
 - **Desktop Runtime**: Electron 44, Vite + `vite-plugin-electron`
@@ -76,7 +71,7 @@ You can download the latest pre-built Windows binaries from the **[GitHub Releas
 
 ---
 
-## 💻 Development & Building
+## Development & Building
 
 ### 1. Clone & Install Dependencies
 ```bash
