@@ -314,46 +314,69 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
           {/* Container format */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
-                Container Format
-              </label>
-              <div className="flex gap-2">
-                {(["mp4", "mkv", "webm"] as VideoContainer[]).map((cnt) => (
-                  <button
-                    key={cnt}
-                    type="button"
-                    onClick={() => setVideoContainer(cnt)}
-                    className={`flex-1 py-2.5 px-3 rounded-xl border-2 border-playful-dark dark:border-slate-700 text-xs font-heading font-extrabold uppercase transition-playful ${
-                      videoContainer === cnt
-                        ? "bg-playful-yellow text-slate-900 shadow-pop dark:shadow-[2px_2px_0px_#010409]"
-                        : "bg-white dark:bg-[#21262d] text-slate-600 dark:text-slate-300 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-slate-50 dark:hover:bg-slate-700"
-                    }`}
-                  >
-                    {cnt}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                  Container Format
+                </label>
+                {videoContainer === "gif" && (
+                  <span className="text-[10px] uppercase font-heading font-extrabold px-2 py-0.5 rounded-full bg-playful-pink text-white border border-playful-dark dark:border-slate-700 shadow-pop-sm">
+                    Animated
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-4 gap-1.5">
+                {(["mp4", "mkv", "webm", "gif"] as VideoContainer[]).map(
+                  (cnt) => (
+                    <button
+                      key={cnt}
+                      type="button"
+                      onClick={() => setVideoContainer(cnt)}
+                      className={`py-2 px-2 rounded-xl border-2 border-playful-dark dark:border-slate-700 text-xs font-heading font-extrabold uppercase transition-playful text-center ${
+                        videoContainer === cnt
+                          ? cnt === "gif"
+                            ? "bg-playful-pink text-white shadow-pop dark:shadow-[2px_2px_0px_#010409]"
+                            : "bg-playful-yellow text-slate-900 shadow-pop dark:shadow-[2px_2px_0px_#010409]"
+                          : "bg-white dark:bg-[#21262d] text-slate-600 dark:text-slate-300 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-slate-50 dark:hover:bg-slate-700"
+                      }`}
+                    >
+                      {cnt}
+                    </button>
+                  ),
+                )}
               </div>
             </div>
 
             {/* Video Toggles */}
             <div className="space-y-2">
               <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
-                Additional Streams
+                {videoContainer === "gif"
+                  ? "Animation Optimization"
+                  : "Additional Streams"}
               </label>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark dark:text-slate-200 bg-playful-muted dark:bg-[#21262d] p-2.5 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={embedSubtitles}
-                    onChange={(e) => setEmbedSubtitles(e.target.checked)}
-                    className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
-                  />
-                  <Subtitles
-                    className="w-4 h-4 text-playful-violet dark:text-violet-400"
-                    strokeWidth={2.5}
-                  />
-                  <span>Download & embed subtitles</span>
-                </label>
+                {videoContainer === "gif" ? (
+                  <div className="p-2.5 rounded-xl bg-playful-pink/10 dark:bg-pink-950/30 border-2 border-playful-dark dark:border-pink-800 text-[11px] text-playful-dark dark:text-pink-200 font-heading font-bold shadow-pop-sm flex items-center space-x-2">
+                    <Sparkles className="w-4 h-4 text-playful-pink shrink-0" />
+                    <span>
+                      Palette-optimized 15fps GIF animation. Tip: use Trim below
+                      for best clip size!
+                    </span>
+                  </div>
+                ) : (
+                  <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark dark:text-slate-200 bg-playful-muted dark:bg-[#21262d] p-2.5 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={embedSubtitles}
+                      onChange={(e) => setEmbedSubtitles(e.target.checked)}
+                      className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
+                    />
+                    <Subtitles
+                      className="w-4 h-4 text-playful-violet dark:text-violet-400"
+                      strokeWidth={2.5}
+                    />
+                    <span>Download & embed subtitles</span>
+                  </label>
+                )}
               </div>
             </div>
           </div>

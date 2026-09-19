@@ -37,7 +37,7 @@ export type VideoQuality =
   | "720"
   | "480"
   | "360";
-export type VideoContainer = "mp4" | "mkv" | "webm";
+export type VideoContainer = "mp4" | "mkv" | "webm" | "gif";
 export type AudioFormat = "mp3" | "m4a" | "flac" | "opus" | "wav";
 export type AudioBitrate = "320" | "256" | "192" | "128" | "native";
 

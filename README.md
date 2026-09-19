@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>The fast, playful, offline-first media downloader powered by yt-dlp & FFmpeg.</strong><br>
-  Download high-fidelity video (4K/8K) and audio (320 kbps MP3, FLAC, M4A, OPUS) from 1,000+ platforms with zero quality loss.
+  Download high-fidelity video (4K/8K), animated GIFs, and audio (320 kbps MP3, FLAC, M4A, OPUS) from 1,000+ platforms with zero quality loss.
 </p>
 
 <p align="center">
@@ -31,11 +31,12 @@ You can download the latest pre-built Windows binaries from the **[GitHub Releas
 
 ---
 
-##  Key Features
+## Key Features
 
-### 1. Lossless Video & High-Fidelity Audio
+### 1. Lossless Video, Animated GIF & High-Fidelity Audio
 - **True Direct Remuxing**: Fetches uncompressed video and audio streams and merges them locally using **FFmpeg stream copy** (0% re-encoding quality degradation).
-- **Video Qualities**: Best / 4K (2160p) / 2K (1440p) / 1080p FHD / 720p HD (MP4, MKV, WebM).
+- **Video Containers & Formats**: MP4, MKV, WebM, and **Animated GIF** (palette-optimized 2-pass rendering via FFmpeg).
+- **Video Qualities**: Best / 4K (2160p) / 2K (1440p) / 1080p FHD / 720p HD / 480p / 360p.
 - **Audio Formats**: MP3 (up to 320 kbps), FLAC (Lossless), M4A / AAC, OPUS (Native stream copy), and WAV.
 
 ### 2. ID3 Album Artwork & Metadata Customizer
@@ -44,6 +45,7 @@ You can download the latest pre-built Windows binaries from the **[GitHub Releas
 
 ### 3. Timestamp Trimming / Clip Section
 - Download only specific segments of long videos, concerts, or podcasts with custom `Start Time` and `End Time` inputs (MM:SS / HH:MM:SS format).
+- Perfect companion for creating lightweight animated GIFs or extracting song snippets.
 
 ### 4. Playlist & Batch Extractor
 - Detects playlists, albums, and multi-video links automatically.
@@ -54,7 +56,12 @@ You can download the latest pre-built Windows binaries from the **[GitHub Releas
 - **Media Library Footprint**: Tracks total downloaded size and file count.
 - **1-Click Temp Cache Purge**: Safely removes orphan `.part` or `.ytdl` files left over from interrupted downloads.
 
-### 6. Desktop Integration & Offline Binaries
+### 6. Midnight Dark & Light Playful UI
+- **Obsidian Dark Mode by default** (`#0D1117`) with vibrant candy pop badges and tactile pop-shadows.
+- **Instant Theme Toggle**: Toggle between Midnight Dark and Light mode anytime.
+- **Accessible & Responsive**: Keyboard shortcuts, clickable card headers, and adaptive layouts.
+
+### 7. Desktop Integration & Offline Binaries
 - Windows native completion notifications and System Tray minimization.
 - Automatic clipboard URL detection.
 - Self-managed offline binaries for `yt-dlp` and `FFmpeg` with a 1-click in-app updater in Settings.
@@ -100,6 +107,5 @@ The output installers and executables will be generated in the `release/` direct
 
 ---
 
-## 📄 License
+## License
 MIT License © 2026 [AnyDownloader](https://github.com/NeoTato/AnyDownloader)
-

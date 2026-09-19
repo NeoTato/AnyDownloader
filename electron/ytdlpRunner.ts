@@ -229,34 +229,49 @@ export class YtdlpRunner {
         args.push("--embed-metadata");
       }
     } else {
-      // Video mode
-      if (options.videoQuality === "best") {
-        args.push("-f", "bestvideo+bestaudio/best");
+      // Video mode / Animated GIF
+      if (options.videoContainer === "gif") {
+        // GIF mode: download video stream and recode to high-quality animated GIF via FFmpeg
+        if (options.videoQuality === "best") {
+          args.push("-f", "bestvideo[height<=?720]/bestvideo/best");
+        } else {
+          const h = Math.min(Number(options.videoQuality) || 480, 720);
+          args.push("-f", `bestvideo[height<=?${h}]/bestvideo/best`);
+        }
+        args.push("--recode-video", "gif");
+        args.push(
+          "--postprocessor-args",
+          "VideoConvertor:-vf fps=15,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse",
+        );
       } else {
-        const h = options.videoQuality;
-        args.push(
-          "-f",
-          `bestvideo[height<=?${h}]+bestaudio/best[height<=?${h}]/best`,
-        );
-      }
+        if (options.videoQuality === "best") {
+          args.push("-f", "bestvideo+bestaudio/best");
+        } else {
+          const h = options.videoQuality;
+          args.push(
+            "-f",
+            `bestvideo[height<=?${h}]+bestaudio/best[height<=?${h}]/best`,
+          );
+        }
 
-      args.push("--merge-output-format", options.videoContainer);
+        args.push("--merge-output-format", options.videoContainer);
 
-      if (options.embedThumbnail) {
-        args.push("--embed-thumbnail");
-      }
+        if (options.embedThumbnail) {
+          args.push("--embed-thumbnail");
+        }
 
-      if (options.embedMetadata) {
-        args.push("--embed-metadata");
-      }
+        if (options.embedMetadata) {
+          args.push("--embed-metadata");
+        }
 
-      if (options.embedSubtitles) {
-        args.push(
-          "--write-subs",
-          "--embed-subs",
-          "--sub-langs",
-          "all,-live_chat",
-        );
+        if (options.embedSubtitles) {
+          args.push(
+            "--write-subs",
+            "--embed-subs",
+            "--sub-langs",
+            "all,-live_chat",
+          );
+        }
       }
     }
 
@@ -397,6 +412,15 @@ export class YtdlpRunner {
           progressState.status = "processing";
           onProgress({ ...progressState });
         } else if (
+          line.includes("[VideoConvertor] Destination:") ||
+          line.includes("[VideoConvertor] Converting video")
+        ) {
+          const match = line.match(/Destination: (.+)/);
+          if (match && match[1]) finalFilePath = match[1].trim();
+          progressState.phase = "Rendering high-quality animated GIF...";
+          progressState.status = "processing";
+          onProgress({ ...progressState });
+        } else if (
           line.includes("[EmbedThumbnail]") ||
           line.includes("[ThumbnailsConvertor]")
         ) {
@@ -427,6 +451,17 @@ export class YtdlpRunner {
       }
 
       if (code === 0) {
+        if (
+          options.videoContainer === "gif" &&
+          finalFilePath &&
+          !finalFilePath.endsWith(".gif")
+        ) {
+          const gifCandidate = finalFilePath.replace(/\.[^/.]+$/, ".gif");
+          if (fs.existsSync(gifCandidate)) {
+            finalFilePath = gifCandidate;
+          }
+        }
+
         progressState.status = "completed";
         progressState.percent = 100;
         progressState.phase = "Completed";
