@@ -9,7 +9,7 @@ import { DownloadQueue } from "./components/DownloadQueue";
 import { HistoryList } from "./components/HistoryList";
 import { SettingsModal } from "./components/SettingsModal";
 import { useDownloader } from "./hooks/useDownloader";
-import { Sparkles, HardDriveDownload } from "lucide-react";
+import { HardDriveDownload } from "lucide-react";
 
 export function App() {
   const [activeTab, setActiveTab] = useState<
@@ -130,11 +130,7 @@ export function App() {
               {/* Hero Banner if nothing loaded yet */}
               {!mediaInfo && !isInspecting && (
                 <div className="text-center space-y-2.5 pt-2 pb-1">
-                  <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-playful-amber dark:bg-amber-400 border-2 border-playful-dark dark:border-slate-800 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-slate-900 text-xs font-bold rotate-[-1deg]">
-                    <Sparkles
-                      className="w-3.5 h-3.5 text-playful-violet"
-                      strokeWidth={2.5}
-                    />
+                  <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-playful-amber dark:bg-amber-400 border-2 border-playful-dark dark:border-slate-800 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-slate-900 text-xs font-bold rotate-[-1deg]">
                     <span>Next-Gen Offline Media Extractor</span>
                   </div>
                   <h1 className="text-2xl sm:text-4xl font-heading font-extrabold tracking-tight text-playful-dark dark:text-white">

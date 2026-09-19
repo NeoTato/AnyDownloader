@@ -14,7 +14,6 @@ import {
   RefreshCw,
   X,
   Info,
-  Sparkles,
 } from "lucide-react";
 import type { HistoryItem } from "../types";
 
@@ -159,10 +158,6 @@ export const HistoryList: React.FC<HistoryListProps> = ({
         <div className="flex items-center space-x-2.5">
           <h2 className="text-xl font-heading font-extrabold text-playful-dark dark:text-slate-100 flex items-center gap-2">
             <span>Download History</span>
-            <Sparkles
-              className="w-4 h-4 text-playful-violet dark:text-violet-400"
-              strokeWidth={2.5}
-            />
           </h2>
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-playful-violet text-white font-mono font-bold border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
             {history.length} items

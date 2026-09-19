@@ -7,7 +7,6 @@ import {
   Music,
   Download,
   Clock,
-  Sparkles,
   Image as ImageIcon,
   X,
   Search,
@@ -68,6 +67,7 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
   const [embedThumbnail, setEmbedThumbnail] = useState<boolean>(
     settings ? settings.defaultEmbedThumbnail : true,
   );
+  const [editorCompatibility, setEditorCompatibility] = useState<boolean>(false);
   const [downloadPath, setDownloadPath] = useState<string>(
     settings?.defaultDownloadPath || defaultPath,
   );
@@ -138,6 +138,7 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
         embedThumbnail: mode === "audio" ? embedThumbnail : true,
         embedMetadata: true,
         embedSubtitles: false,
+        editorCompatibility: mode === "video" ? editorCompatibility : false,
         downloadPath: downloadPath || defaultPath,
         speedLimit: settings?.downloadSpeedLimit || "unlimited",
       }),
@@ -259,15 +260,26 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
                 </label>
               </>
             ) : (
-              <select
-                value={videoQuality}
-                onChange={(e) => setVideoQuality(e.target.value as any)}
-                className="px-2.5 py-1.5 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs text-playful-dark dark:text-slate-100 font-bold shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
-              >
-                <option value="best">Original Best</option>
-                <option value="1080">1080p FHD</option>
-                <option value="720">720p HD</option>
-              </select>
+              <div className="flex items-center gap-2">
+                <select
+                  value={videoQuality}
+                  onChange={(e) => setVideoQuality(e.target.value as any)}
+                  className="px-2.5 py-1.5 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs text-playful-dark dark:text-slate-100 font-bold shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]"
+                >
+                  <option value="best">Original Best</option>
+                  <option value="1080">1080p FHD</option>
+                  <option value="720">720p HD</option>
+                </select>
+                <label className="flex items-center space-x-1.5 cursor-pointer text-playful-dark dark:text-slate-200 font-bold text-xs select-none">
+                  <input
+                    type="checkbox"
+                    checked={editorCompatibility}
+                    onChange={(e) => setEditorCompatibility(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
+                  />
+                  <span>H.264 (Premiere)</span>
+                </label>
+              </div>
             )}
           </div>
         </div>
@@ -472,10 +484,6 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
             Download {selectedIds.size} Selected{" "}
             {selectedIds.size === 1 ? "Track" : "Tracks"}
           </span>
-          <Sparkles
-            className="w-4 h-4 text-yellow-300"
-            strokeWidth={2.5}
-          />
         </button>
       </div>
     </div>

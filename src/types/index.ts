@@ -55,6 +55,7 @@ export interface DownloadOptions {
   embedThumbnail: boolean; // Cover art toggle for audio/video
   embedMetadata: boolean;
   embedSubtitles: boolean;
+  editorCompatibility?: boolean; // Transcode video to standard H.264 + AAC for Adobe Premiere / DaVinci Resolve
   downloadPath: string;
   speedLimit?: string; // e.g. 'unlimited', '1M', '5M', '10M', '20M'
   // Feature: Timestamp trimming

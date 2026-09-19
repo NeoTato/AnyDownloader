@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Film,
   Music,
-  Sparkles,
   Image as ImageIcon,
   Tag,
   Subtitles,
@@ -51,6 +50,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
     settings?.defaultVideoContainer || "mp4",
   );
   const [embedSubtitles, setEmbedSubtitles] = useState(false);
+  const [editorCompatibility, setEditorCompatibility] = useState(false);
   const embedVideoThumbnail = true;
 
   // Audio Options
@@ -150,6 +150,10 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
       embedThumbnail: mode === "audio" ? embedThumbnail : embedVideoThumbnail,
       embedMetadata,
       embedSubtitles: mode === "video" ? embedSubtitles : false,
+      editorCompatibility:
+        mode === "video" && videoContainer !== "gif"
+          ? editorCompatibility
+          : false,
       downloadPath: downloadPath || defaultPath,
       clipRange: clipEnabled
         ? {
@@ -351,31 +355,54 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
               <label className="text-xs font-heading font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 {videoContainer === "gif"
                   ? "Animation Optimization"
-                  : "Additional Streams"}
+                  : "Additional Streams & Compatibility"}
               </label>
               <div className="flex flex-col gap-2">
                 {videoContainer === "gif" ? (
                   <div className="p-2.5 rounded-xl bg-playful-pink/10 dark:bg-pink-950/30 border-2 border-playful-dark dark:border-pink-800 text-[11px] text-playful-dark dark:text-pink-200 font-heading font-bold shadow-pop-sm flex items-center space-x-2">
-                    <Sparkles className="w-4 h-4 text-playful-pink shrink-0" />
+                    <SlidersHorizontal className="w-4 h-4 text-playful-pink shrink-0" />
                     <span>
                       Palette-optimized 15fps GIF animation. Tip: use Trim below
                       for best clip size!
                     </span>
                   </div>
                 ) : (
-                  <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark dark:text-slate-200 bg-playful-muted dark:bg-[#21262d] p-2.5 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={embedSubtitles}
-                      onChange={(e) => setEmbedSubtitles(e.target.checked)}
-                      className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
-                    />
-                    <Subtitles
-                      className="w-4 h-4 text-playful-violet dark:text-violet-400"
-                      strokeWidth={2.5}
-                    />
-                    <span>Download & embed subtitles</span>
-                  </label>
+                  <>
+                    <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark dark:text-slate-200 bg-playful-muted dark:bg-[#21262d] p-2.5 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={editorCompatibility}
+                        onChange={(e) =>
+                          setEditorCompatibility(e.target.checked)
+                        }
+                        className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
+                      />
+                      <Film
+                        className="w-4 h-4 text-playful-violet dark:text-violet-400 shrink-0"
+                        strokeWidth={2.5}
+                      />
+                      <div className="flex flex-col">
+                        <span>Editor Friendly (Premiere & DaVinci)</span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">
+                          Converts to standard H.264 + AAC for direct timeline import
+                        </span>
+                      </div>
+                    </label>
+
+                    <label className="flex items-center space-x-2.5 cursor-pointer text-xs font-heading font-bold text-playful-dark dark:text-slate-200 bg-playful-muted dark:bg-[#21262d] p-2.5 rounded-xl border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] hover:bg-white dark:hover:bg-slate-700 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={embedSubtitles}
+                        onChange={(e) => setEmbedSubtitles(e.target.checked)}
+                        className="w-4 h-4 rounded border-2 border-playful-dark dark:border-slate-700 text-playful-violet focus:ring-playful-violet accent-playful-violet"
+                      />
+                      <Subtitles
+                        className="w-4 h-4 text-playful-violet dark:text-violet-400 shrink-0"
+                        strokeWidth={2.5}
+                      />
+                      <span>Download & embed subtitles</span>
+                    </label>
+                  </>
                 )}
               </div>
             </div>
@@ -805,13 +832,9 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
             {clipError
               ? clipError
               : mode === "video"
-                ? `Download Video (${videoQuality === "best" ? "Lossless Best" : videoQuality + "p"} ${videoContainer.toUpperCase()}${clipEnabled ? " • Trimmed" : ""})`
+                ? `Download Video (${videoQuality === "best" ? "Lossless Best" : videoQuality + "p"} ${videoContainer.toUpperCase()}${editorCompatibility ? " • H.264" : ""}${clipEnabled ? " • Trimmed" : ""})`
                 : `Extract Audio (${audioFormat.toUpperCase()}${audioFormat === "mp3" ? ` ${audioBitrate}k` : ""}${embedThumbnail ? " + Cover Art" : ""}${clipEnabled ? " • Trimmed" : ""})`}
           </span>
-          <Sparkles
-            className="w-4 h-4 ml-2 text-playful-yellow fill-playful-yellow"
-            strokeWidth={2.5}
-          />
         </button>
       </div>
     </div>

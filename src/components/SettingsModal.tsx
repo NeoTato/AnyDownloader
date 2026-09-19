@@ -12,7 +12,6 @@ import {
   Palette,
   Trash2,
   Database,
-  Sparkles,
   Folder,
 } from "lucide-react";
 import type { AppSettings, EngineStatus, StorageStats } from "../types";
@@ -158,7 +157,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         {cleanMessage && (
           <div className="p-3 bg-playful-mint/20 dark:bg-emerald-950/40 border-2 border-playful-dark dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 font-heading font-bold flex items-center space-x-2 shadow-pop-sm animate-in fade-in">
-            <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{cleanMessage}</span>
           </div>
         )}

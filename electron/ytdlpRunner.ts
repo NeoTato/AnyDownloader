@@ -254,7 +254,16 @@ export class YtdlpRunner {
           );
         }
 
-        args.push("--merge-output-format", options.videoContainer);
+        if (options.editorCompatibility) {
+          // Standard H.264 (AVC) + AAC in MP4 for 100% native compatibility with Premiere Pro & DaVinci Resolve
+          args.push("--recode-video", "mp4");
+          args.push(
+            "--postprocessor-args",
+            "VideoConvertor:-c:v libx264 -crf 18 -preset fast -pix_fmt yuv420p -c:a aac -b:a 320k",
+          );
+        } else {
+          args.push("--merge-output-format", options.videoContainer);
+        }
 
         if (options.embedThumbnail) {
           args.push("--embed-thumbnail");
@@ -417,7 +426,10 @@ export class YtdlpRunner {
         ) {
           const match = line.match(/Destination: (.+)/);
           if (match && match[1]) finalFilePath = match[1].trim();
-          progressState.phase = "Rendering high-quality animated GIF...";
+          progressState.phase =
+            options.videoContainer === "gif"
+              ? "Rendering high-quality animated GIF..."
+              : "Transcoding with H.264/AAC for Premiere & DaVinci...";
           progressState.status = "processing";
           onProgress({ ...progressState });
         } else if (
@@ -459,6 +471,15 @@ export class YtdlpRunner {
           const gifCandidate = finalFilePath.replace(/\.[^/.]+$/, ".gif");
           if (fs.existsSync(gifCandidate)) {
             finalFilePath = gifCandidate;
+          }
+        } else if (
+          options.editorCompatibility &&
+          finalFilePath &&
+          !finalFilePath.endsWith(".mp4")
+        ) {
+          const mp4Candidate = finalFilePath.replace(/\.[^/.]+$/, ".mp4");
+          if (fs.existsSync(mp4Candidate)) {
+            finalFilePath = mp4Candidate;
           }
         }
 

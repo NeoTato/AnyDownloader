@@ -1,5 +1,5 @@
 import React from "react";
-import { ClipboardPaste, X, Loader2, Sparkles, Link2 } from "lucide-react";
+import { ClipboardPaste, X, Loader2, ArrowRight, Link2 } from "lucide-react";
 
 interface UrlInputProps {
   url: string;
@@ -127,8 +127,8 @@ export const UrlInput: React.FC<UrlInputProps> = ({
                 </>
               ) : (
                 <>
-                  <Sparkles
-                    className="w-4 h-4 mr-1.5 text-playful-yellow fill-playful-yellow"
+                  <ArrowRight
+                    className="w-4 h-4 mr-1.5"
                     strokeWidth={2.5}
                   />
                   <span>Analyze</span>

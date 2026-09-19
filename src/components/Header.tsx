@@ -4,7 +4,6 @@ import {
   ListOrdered,
   History,
   Settings as SettingsIcon,
-  Sparkles,
   AlertTriangle,
   Sun,
   Moon,
@@ -38,12 +37,11 @@ export const Header: React.FC<HeaderProps> = ({
           className="flex items-center space-x-3 cursor-pointer group"
           onClick={() => setActiveTab("downloader")}
         >
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-playful-violet border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-white transition-transform group-hover:rotate-6 group-hover:scale-105">
+          <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-playful-violet border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-white transition-transform group-hover:rotate-6 group-hover:scale-105">
             <Download
               className="w-5 h-5"
               strokeWidth={2.5}
             />
-            <Sparkles className="w-3.5 h-3.5 absolute -top-1.5 -right-1.5 text-playful-yellow drop-shadow-sm fill-playful-yellow animate-bounce-subtle" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
