@@ -109,6 +109,8 @@ export class YtdlpRunner {
       "--no-warnings",
       "--flat-playlist",
       "--skip-download",
+      "--remote-components",
+      "ejs:github",
       ...cookieArgs,
       url,
     ];
@@ -271,6 +273,8 @@ export class YtdlpRunner {
       "--windows-filenames",
       "--trim-filenames",
       "120",
+      "--remote-components",
+      "ejs:github",
       "--progress-template",
       "PROGRESS:%(progress._percent_str)s|%(progress._speed_str)s|%(progress._eta_str)s|%(progress._total_bytes_estimate_str)s|%(progress.status)s",
       "-o",

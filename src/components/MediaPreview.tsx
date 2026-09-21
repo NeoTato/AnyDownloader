@@ -155,6 +155,10 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({
             )}
           </div>
 
+          <div className="p-3 bg-amber-100/60 dark:bg-amber-950/40 rounded-xl border border-amber-300 dark:border-amber-900/60 text-[11px] text-amber-900/90 dark:text-amber-200">
+            <span className="font-bold">Pro-tip for 100% bypass:</span> If your browser has database lock protection while open, you can export a <code className="bg-amber-200/60 dark:bg-black/40 px-1 py-0.5 rounded font-mono font-bold">cookies.txt</code> using any cookie exporter extension (e.g. <em>Get cookies.txt LOCALLY</em>) and select it above with our built-in JavaScript challenge solver (<code className="bg-amber-200/60 dark:bg-black/40 px-1 py-0.5 rounded font-mono font-bold">--remote-components ejs:github</code>).
+          </div>
+
           {error && (
             <details className="text-[11px] text-amber-900/70 dark:text-amber-400/80 font-mono">
               <summary className="cursor-pointer font-bold hover:underline">
