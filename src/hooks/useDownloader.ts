@@ -170,6 +170,10 @@ export function useDownloader() {
     return path;
   }, []);
 
+  const selectCookieFile = useCallback(async () => {
+    return window.electronAPI.selectCookieFile();
+  }, []);
+
   // History Operations
   const refreshHistory = useCallback(async () => {
     try {
@@ -249,6 +253,7 @@ export function useDownloader() {
     settings,
     updateSettings,
     selectDownloadFolder,
+    selectCookieFile,
     openFile,
     showInFolder,
     engineStatus,

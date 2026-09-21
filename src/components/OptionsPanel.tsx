@@ -384,7 +384,8 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
                       <div className="flex flex-col">
                         <span>Editor Friendly (Premiere & DaVinci)</span>
                         <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">
-                          Converts to standard H.264 + AAC for direct timeline import
+                          Converts to standard H.264 + AAC for direct timeline
+                          import
                         </span>
                       </div>
                     </label>

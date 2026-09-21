@@ -7,6 +7,7 @@ import type {
   DownloadOptions,
   DownloadProgress,
   HistoryItem,
+  AppSettings,
 } from "../src/types";
 
 export class YtdlpRunner {
@@ -30,12 +31,85 @@ export class YtdlpRunner {
   }
 
   public async inspectUrl(url: string): Promise<MediaInfo> {
+  public getZenProfilePath(): string | null {
+    const isWin = process.platform === "win32";
+    const isMac = process.platform === "darwin";
+    let zenDir = "";
+    if (isWin) {
+      zenDir = path.join(process.env.APPDATA || "", "zen", "Profiles");
+    } else if (isMac) {
+      zenDir = path.join(
+        process.env.HOME || "",
+        "Library",
+        "Application Support",
+        "zen",
+        "Profiles",
+      );
+    } else {
+      zenDir = path.join(process.env.HOME || "", ".zen");
+    }
+
+    if (fs.existsSync(zenDir)) {
+      try {
+        const entries = fs.readdirSync(zenDir, { withFileTypes: true });
+        const releaseProfile = entries.find(
+          (e) => e.isDirectory() && e.name.includes("Default (release)"),
+        );
+        if (releaseProfile) return path.join(zenDir, releaseProfile.name);
+
+        const defaultProfile = entries.find(
+          (e) => e.isDirectory() && e.name.toLowerCase().includes("default"),
+        );
+        if (defaultProfile) return path.join(zenDir, defaultProfile.name);
+
+        const anyDir = entries.find((e) => e.isDirectory());
+        if (anyDir) return path.join(zenDir, anyDir.name);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  public getCookieArgs(settings?: AppSettings | null): string[] {
+    if (
+      !settings ||
+      !settings.cookieSource ||
+      settings.cookieSource === "none"
+    ) {
+      return [];
+    }
+
+    if (settings.cookieSource === "zen") {
+      const zenProfile = this.getZenProfilePath();
+      if (zenProfile) {
+        return ["--cookies-from-browser", `firefox:${zenProfile}`];
+      }
+      return ["--cookies-from-browser", "firefox"];
+    }
+
+    if (settings.cookieSource === "file") {
+      if (settings.cookieFilePath && fs.existsSync(settings.cookieFilePath)) {
+        return ["--cookies", settings.cookieFilePath];
+      }
+      return [];
+    }
+
+    return ["--cookies-from-browser", settings.cookieSource];
+  }
+
+  public async inspectUrl(
+    url: string,
+    settings?: AppSettings | null,
+  ): Promise<MediaInfo> {
     const ytdlp = this.getYtdlpPath();
+    const cookieArgs = this.getCookieArgs(settings);
     const args = [
       "--dump-single-json",
       "--no-warnings",
       "--flat-playlist",
       "--skip-download",
+      ...cookieArgs,
       url,
     ];
 
@@ -172,6 +246,7 @@ export class YtdlpRunner {
     onProgress: (p: DownloadProgress) => void,
     onComplete: (item: HistoryItem) => void,
     onError: (err: string) => void,
+    settings?: AppSettings | null,
   ): { cancel: () => void } {
     const ytdlp = this.getYtdlpPath();
     const isAudio = options.mode === "audio";
@@ -204,6 +279,11 @@ export class YtdlpRunner {
 
     if (this.binManager.ffmpegPath) {
       args.push("--ffmpeg-location", path.dirname(this.binManager.ffmpegPath));
+    }
+
+    const cookieArgs = this.getCookieArgs(settings);
+    if (cookieArgs.length > 0) {
+      args.push(...cookieArgs);
     }
 
     if (isAudio) {

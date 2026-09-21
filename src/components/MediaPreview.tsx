@@ -1,14 +1,174 @@
 import React from "react";
 import { User, Clock, Eye, CheckCircle2, AlertCircle } from "lucide-react";
 import type { MediaInfo } from "../types";
+import React, { useState } from "react";
+import {
+  User,
+  Clock,
+  Eye,
+  CheckCircle2,
+  AlertCircle,
+  KeyRound,
+  RefreshCw,
+  FolderOpen,
+} from "lucide-react";
+import type { MediaInfo, AppSettings, CookieSource } from "../types";
 
 interface MediaPreviewProps {
   media: MediaInfo | null;
   error: string | null;
+  currentUrl?: string;
+  settings?: AppSettings | null;
+  onUpdateSettings?: (newSettings: Partial<AppSettings>) => void;
+  onRetryInspect?: (url: string) => void;
+  onSelectCookieFile?: () => Promise<string | null>;
 }
 
 export const MediaPreview: React.FC<MediaPreviewProps> = ({ media, error }) => {
+export const MediaPreview: React.FC<MediaPreviewProps> = ({
+  media,
+  error,
+  currentUrl,
+  settings,
+  onUpdateSettings,
+  onRetryInspect,
+  onSelectCookieFile,
+}) => {
+  const isAuthError = Boolean(
+    error &&
+    (error.toLowerCase().includes("age-restricted") ||
+      error.toLowerCase().includes("sign in to confirm your age") ||
+      error.toLowerCase().includes("cookies") ||
+      error.toLowerCase().includes("private video") ||
+      error.toLowerCase().includes("sign in") ||
+      error.toLowerCase().includes("bot")),
+  );
+
+  const [selectedBrowser, setSelectedBrowser] = useState<CookieSource>(
+    settings?.cookieSource && settings.cookieSource !== "none"
+      ? settings.cookieSource
+      : "zen",
+  );
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  const handleUnlockAndRetry = async () => {
+    if (onUpdateSettings) {
+      onUpdateSettings({ cookieSource: selectedBrowser });
+    }
+    if (onRetryInspect && currentUrl) {
+      setIsRetrying(true);
+      await onRetryInspect(currentUrl);
+      setIsRetrying(false);
+    }
+  };
+
+  const handleBrowseCookieFile = async () => {
+    if (onSelectCookieFile && onUpdateSettings) {
+      const file = await onSelectCookieFile();
+      if (file) {
+        onUpdateSettings({ cookieSource: "file", cookieFilePath: file });
+        if (onRetryInspect && currentUrl) {
+          setIsRetrying(true);
+          await onRetryInspect(currentUrl);
+          setIsRetrying(false);
+        }
+      }
+    }
+  };
+
   if (error) {
+    if (isAuthError) {
+      return (
+        <div className="w-full sticker-card p-5 bg-amber-50 dark:bg-[#1a140a] border-2 border-amber-500/80 dark:border-amber-600 shadow-pop space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b-2 border-amber-200 dark:border-amber-900/60 pb-3">
+            <div className="flex items-start space-x-3 min-w-0">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 border-2 border-playful-dark shadow-pop-sm mt-0.5">
+                <KeyRound
+                  className="w-5 h-5"
+                  strokeWidth={2.5}
+                />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h4 className="font-heading font-extrabold text-base text-amber-950 dark:text-amber-100">
+                    Age-Restricted Video Detected
+                  </h4>
+                  <span className="text-[10px] font-heading font-extrabold px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 border border-amber-400">
+                    18+ Gate
+                  </span>
+                </div>
+                <p className="text-xs text-amber-900/90 dark:text-amber-300 font-medium mt-0.5">
+                  YouTube requires account authentication to verify age. Select
+                  your browser to borrow your active login session:
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <select
+              value={selectedBrowser}
+              onChange={(e) =>
+                setSelectedBrowser(e.target.value as CookieSource)
+              }
+              className="flex-1 px-3.5 py-2.5 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-heading font-bold text-playful-dark dark:text-slate-100 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] focus:outline-none focus:border-playful-violet"
+            >
+              <option value="zen">Zen Browser (Auto-detect profile)</option>
+              <option value="chrome">Google Chrome</option>
+              <option value="edge">Microsoft Edge</option>
+              <option value="firefox">Mozilla Firefox</option>
+              <option value="brave">Brave Browser</option>
+              <option value="opera">Opera / Opera GX</option>
+              <option value="vivaldi">Vivaldi</option>
+              <option value="file">Custom cookies.txt File...</option>
+            </select>
+
+            {selectedBrowser === "file" ? (
+              <button
+                type="button"
+                onClick={handleBrowseCookieFile}
+                className="candy-btn px-5 py-2.5 text-xs flex items-center justify-center space-x-1.5"
+              >
+                <FolderOpen
+                  className="w-4 h-4"
+                  strokeWidth={2.5}
+                />
+                <span>Select File & Unlock</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleUnlockAndRetry}
+                disabled={isRetrying}
+                className="candy-btn px-5 py-2.5 text-xs flex items-center justify-center space-x-1.5"
+              >
+                <RefreshCw
+                  className={`w-4 h-4 ${isRetrying ? "animate-spin" : ""}`}
+                  strokeWidth={2.5}
+                />
+                <span>
+                  {isRetrying
+                    ? "Authenticating..."
+                    : `Unlock with ${selectedBrowser === "zen" ? "Zen" : selectedBrowser.toUpperCase()} & Retry`}
+                </span>
+              </button>
+            )}
+          </div>
+
+          {error && (
+            <details className="text-[11px] text-amber-900/70 dark:text-amber-400/80 font-mono">
+              <summary className="cursor-pointer font-bold hover:underline">
+                View technical error details
+              </summary>
+              <p className="mt-1.5 p-2 rounded-lg bg-amber-100/50 dark:bg-black/30 border border-amber-300 dark:border-amber-900/50 break-all">
+                {error}
+              </p>
+            </details>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div className="w-full p-4 rounded-2xl bg-rose-100 dark:bg-rose-950/60 border-2 border-playful-dark dark:border-rose-900 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] text-rose-900 dark:text-rose-200 flex items-start space-x-3">
         <div className="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center shrink-0 border-2 border-playful-dark dark:border-rose-700">

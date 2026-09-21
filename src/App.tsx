@@ -35,6 +35,7 @@ export function App() {
     settings,
     updateSettings,
     selectDownloadFolder,
+    selectCookieFile,
     openFile,
     showInFolder,
     engineStatus,
@@ -164,6 +165,11 @@ export function App() {
                 <MediaPreview
                   media={mediaInfo}
                   error={inspectError}
+                  currentUrl={url}
+                  settings={settings}
+                  onUpdateSettings={updateSettings}
+                  onRetryInspect={inspect}
+                  onSelectCookieFile={selectCookieFile}
                 />
               )}
 
@@ -219,6 +225,7 @@ export function App() {
               settings={settings}
               onUpdateSettings={updateSettings}
               onSelectFolder={selectDownloadFolder}
+              onSelectCookieFile={selectCookieFile}
               engineStatus={engineStatus}
               onUpdateEngine={updateEngine}
               isUpdatingEngine={isUpdatingEngine}

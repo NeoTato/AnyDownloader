@@ -18,6 +18,8 @@ const defaultSettings: AppSettings = {
   enableNotifications: true,
   autoPasteClipboard: true,
   darkMode: true,
+  cookieSource: "none",
+  cookieFilePath: "",
 };
 
 export class AppStore {

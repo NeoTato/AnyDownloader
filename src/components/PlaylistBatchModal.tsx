@@ -67,7 +67,8 @@ export const PlaylistBatchModal: React.FC<PlaylistBatchModalProps> = ({
   const [embedThumbnail, setEmbedThumbnail] = useState<boolean>(
     settings ? settings.defaultEmbedThumbnail : true,
   );
-  const [editorCompatibility, setEditorCompatibility] = useState<boolean>(false);
+  const [editorCompatibility, setEditorCompatibility] =
+    useState<boolean>(false);
   const [downloadPath, setDownloadPath] = useState<string>(
     settings?.defaultDownloadPath || defaultPath,
   );

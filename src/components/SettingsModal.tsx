@@ -13,13 +13,22 @@ import {
   Trash2,
   Database,
   Folder,
+  KeyRound,
+  FolderOpen,
 } from "lucide-react";
 import type { AppSettings, EngineStatus, StorageStats } from "../types";
+import type {
+  AppSettings,
+  EngineStatus,
+  StorageStats,
+  CookieSource,
+} from "../types";
 
 interface SettingsModalProps {
   settings: AppSettings | null;
   onUpdateSettings: (newSettings: Partial<AppSettings>) => void;
   onSelectFolder: () => Promise<string | null>;
+  onSelectCookieFile?: () => Promise<string | null>;
   engineStatus: EngineStatus | null;
   onUpdateEngine: () => void;
   isUpdatingEngine: boolean;
@@ -38,6 +47,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   settings,
   onUpdateSettings,
   onSelectFolder,
+  onSelectCookieFile,
   engineStatus,
   onUpdateEngine,
   isUpdatingEngine,
@@ -675,6 +685,144 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             />
             <span>Auto-detect media links when copying to clipboard</span>
           </label>
+        </div>
+      </div>
+
+      {/* Account Authentication & Age-Gate Unlock Card */}
+      <div className="sticker-card p-6 space-y-4">
+        <div className="flex items-center space-x-3 border-b-2 border-playful-dark/10 dark:border-slate-800 pb-4">
+          <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-900 dark:text-amber-200 flex items-center justify-center border-2 border-playful-dark shadow-pop-sm">
+            <KeyRound
+              className="w-5 h-5 text-amber-600 dark:text-amber-400"
+              strokeWidth={2.5}
+            />
+          </div>
+          <div>
+            <h3 className="font-heading font-extrabold text-base text-playful-dark dark:text-white">
+              Account Authentication & Age-Gate Unlock
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+              Bypass 18+ age restrictions, private links, and bot-checks safely
+              by borrowing your active browser session
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-heading font-extrabold text-playful-dark dark:text-slate-200">
+              Default Browser Session
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                {
+                  id: "none",
+                  label: "Disabled",
+                  desc: "No browser cookies used",
+                },
+                {
+                  id: "zen",
+                  label: "Zen Browser",
+                  desc: "Auto-detects active profile",
+                },
+                {
+                  id: "chrome",
+                  label: "Google Chrome",
+                  desc: "Default Chrome session",
+                },
+                {
+                  id: "edge",
+                  label: "Microsoft Edge",
+                  desc: "Default Edge profile",
+                },
+                {
+                  id: "firefox",
+                  label: "Mozilla Firefox",
+                  desc: "Default Firefox profile",
+                },
+                {
+                  id: "brave",
+                  label: "Brave Browser",
+                  desc: "Default Brave profile",
+                },
+                { id: "opera", label: "Opera", desc: "Default Opera profile" },
+                {
+                  id: "vivaldi",
+                  label: "Vivaldi",
+                  desc: "Default Vivaldi profile",
+                },
+                {
+                  id: "file",
+                  label: "Custom cookies.txt",
+                  desc: "Exported cookies file",
+                },
+              ].map((item) => {
+                const isSelected =
+                  (settings.cookieSource || "none") === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() =>
+                      onUpdateSettings({
+                        cookieSource: item.id as CookieSource,
+                      })
+                    }
+                    className={`p-3 rounded-xl border-2 border-playful-dark text-left transition-all flex flex-col justify-center ${
+                      isSelected
+                        ? "bg-amber-100 dark:bg-amber-950/50 border-amber-600 shadow-pop-sm"
+                        : "bg-slate-50 dark:bg-[#161b22] hover:bg-slate-100 dark:hover:bg-[#21262d]"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span
+                        className={`text-xs font-heading font-extrabold ${isSelected ? "text-amber-900 dark:text-amber-200" : "text-playful-dark dark:text-slate-200"}`}
+                      >
+                        {item.label}
+                      </span>
+                      {isSelected && (
+                        <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {item.desc}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {settings.cookieSource === "file" && (
+            <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-400 dark:border-amber-800 space-y-2 animate-in fade-in">
+              <label className="text-xs font-heading font-extrabold text-amber-900 dark:text-amber-200 block">
+                Selected cookies.txt File
+              </label>
+              <div className="flex items-center space-x-2">
+                <div className="flex-1 px-3 py-2 bg-white dark:bg-[#0d1117] border-2 border-playful-dark rounded-xl text-xs font-mono text-slate-700 dark:text-slate-300 truncate">
+                  {settings.cookieFilePath || "No file selected"}
+                </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (onSelectCookieFile) {
+                      const file = await onSelectCookieFile();
+                      if (file) {
+                        onUpdateSettings({
+                          cookieFilePath: file,
+                          cookieSource: "file",
+                        });
+                      }
+                    }
+                  }}
+                  className="candy-btn-secondary px-3 py-2 text-xs font-bold shrink-0 flex items-center space-x-1"
+                >
+                  <FolderOpen className="w-3.5 h-3.5" />
+                  <span>Choose File</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

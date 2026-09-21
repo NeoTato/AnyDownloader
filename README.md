@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/Electron-44.2.0-475569.svg?style=for-the-badge&logo=electron" alt="Electron" />
   <img src="https://img.shields.io/badge/React-19.0-61DAFB.svg?style=for-the-badge&logo=react" alt="React 19" />
   <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6.svg?style=for-the-badge&logo=typescript" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Tailwind-3.4-38B2AC.svg?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Tailwind-3.4-38B2AC.svg?style=for-the-badge&wlogo=tailwind-css" alt="Tailwind CSS" />
   <img src="https://img.shields.io/badge/Platform-Windows-0078D6.svg?style=for-the-badge&logo=windows" alt="Windows" />
 </p>
 

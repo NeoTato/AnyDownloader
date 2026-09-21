@@ -172,6 +172,8 @@ function setupIpcHandlers() {
   ipcMain.handle("inspect-url", async (_event, targetUrl: string) => {
     try {
       const data = await ytdlpRunner.inspectUrl(targetUrl);
+      const currentSettings = appStore.getSettings();
+      const data = await ytdlpRunner.inspectUrl(targetUrl, currentSettings);
       return { success: true, data };
     } catch (err: any) {
       return { success: false, error: err.message || "Failed to inspect URL" };
@@ -191,6 +193,7 @@ function setupIpcHandlers() {
   // Start Download
   ipcMain.handle("start-download", async (_event, options: DownloadOptions) => {
     try {
+      const currentSettings = appStore.getSettings();
       ytdlpRunner.startDownload(
         options,
         (progress) => {
@@ -223,6 +226,7 @@ function setupIpcHandlers() {
         (errMsg) => {
           console.error(`Download error for ${options.id}:`, errMsg);
         },
+        currentSettings,
       );
       return { success: true, id: options.id };
     } catch (err: any) {
@@ -251,6 +255,23 @@ function setupIpcHandlers() {
     const result = await dialog.showOpenDialog(win, {
       properties: ["openDirectory", "createDirectory"],
       title: "Select Download Destination Folder",
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      return result.filePaths[0];
+    }
+    return null;
+  });
+
+  // Select Cookie File dialog
+  ipcMain.handle("select-cookie-file", async () => {
+    if (!win) return null;
+    const result = await dialog.showOpenDialog(win, {
+      properties: ["openFile"],
+      title: "Select Exported cookies.txt File",
+      filters: [
+        { name: "Cookie Text Files", extensions: ["txt"] },
+        { name: "All Files", extensions: ["*"] },
+      ],
     });
     if (!result.canceled && result.filePaths.length > 0) {
       return result.filePaths[0];

@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   saveSettings: (settings: Partial<AppSettings>) =>
     ipcRenderer.invoke("save-settings", settings),
   selectFolder: () => ipcRenderer.invoke("select-folder"),
+  selectCookieFile: () => ipcRenderer.invoke("select-cookie-file"),
   getHistory: () => ipcRenderer.invoke("get-history"),
   clearHistory: () => ipcRenderer.invoke("clear-history"),
   deleteHistoryItem: (id: string) =>

@@ -163,6 +163,30 @@ export const DownloadDefaultsBar: React.FC<DownloadDefaultsBarProps> = ({
             </select>
           </div>
 
+          {/* Browser Session (Age Gate & Auth) */}
+          <div className="space-y-1 p-2.5 rounded-2xl bg-playful-muted dark:bg-[#21262d] border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409]">
+            <label className="text-[10px] font-heading font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-wider block">
+              Account / Age Unlock
+            </label>
+            <select
+              value={settings.cookieSource || "none"}
+              onChange={(e) =>
+                onUpdateSettings({ cookieSource: e.target.value as any })
+              }
+              className="w-full px-2.5 py-1.5 bg-white dark:bg-[#0d1117] border-2 border-playful-dark dark:border-slate-700 rounded-xl text-xs font-heading font-bold text-playful-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-playful-violet"
+            >
+              <option value="none">Disabled (No Auth)</option>
+              <option value="zen">Zen Browser (Active)</option>
+              <option value="chrome">Google Chrome</option>
+              <option value="edge">Microsoft Edge</option>
+              <option value="firefox">Mozilla Firefox</option>
+              <option value="brave">Brave Browser</option>
+              <option value="opera">Opera</option>
+              <option value="vivaldi">Vivaldi</option>
+              <option value="file">Custom cookies.txt file</option>
+            </select>
+          </div>
+
           {/* Checkbox Presets */}
           <div className="p-2.5 rounded-2xl bg-playful-muted dark:bg-[#21262d] border-2 border-playful-dark dark:border-slate-700 shadow-pop-sm dark:shadow-[2px_2px_0px_#010409] sm:col-span-2 lg:col-span-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

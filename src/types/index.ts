@@ -116,6 +116,17 @@ export interface HistoryItem {
   fileExists?: boolean;
 }
 
+export type CookieSource =
+  | "none"
+  | "zen"
+  | "chrome"
+  | "edge"
+  | "firefox"
+  | "brave"
+  | "opera"
+  | "vivaldi"
+  | "file";
+
 export interface AppSettings {
   defaultDownloadPath: string;
   defaultMode: MediaMode;
@@ -131,6 +142,8 @@ export interface AppSettings {
   enableNotifications: boolean;
   autoPasteClipboard: boolean;
   darkMode: boolean;
+  cookieSource: CookieSource;
+  cookieFilePath?: string;
 }
 
 export interface EngineStatus {
@@ -185,6 +198,7 @@ export interface ElectronAPI {
   getSettings: () => Promise<AppSettings>;
   saveSettings: (settings: Partial<AppSettings>) => Promise<AppSettings>;
   selectFolder: () => Promise<string | null>;
+  selectCookieFile: () => Promise<string | null>;
   getHistory: () => Promise<HistoryItem[]>;
   clearHistory: () => Promise<void>;
   deleteHistoryItem: (id: string) => Promise<void>;
