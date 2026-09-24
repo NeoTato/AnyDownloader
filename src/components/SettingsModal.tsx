@@ -16,7 +16,6 @@ import {
   KeyRound,
   FolderOpen,
 } from "lucide-react";
-import type { AppSettings, EngineStatus, StorageStats } from "../types";
 import type {
   AppSettings,
   EngineStatus,

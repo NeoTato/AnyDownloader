@@ -171,7 +171,6 @@ function setupIpcHandlers() {
   // Inspect URL (handles playlists and single media)
   ipcMain.handle("inspect-url", async (_event, targetUrl: string) => {
     try {
-      const data = await ytdlpRunner.inspectUrl(targetUrl);
       const currentSettings = appStore.getSettings();
       const data = await ytdlpRunner.inspectUrl(targetUrl, currentSettings);
       return { success: true, data };
