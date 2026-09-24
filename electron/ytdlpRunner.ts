@@ -30,7 +30,6 @@ export class YtdlpRunner {
     return this.binManager.ytdlpPath;
   }
 
-  public async inspectUrl(url: string): Promise<MediaInfo> {
   public getZenProfilePath(): string | null {
     const isWin = process.platform === "win32";
     const isMac = process.platform === "darwin";

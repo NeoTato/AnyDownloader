@@ -1,6 +1,3 @@
-import React from "react";
-import { User, Clock, Eye, CheckCircle2, AlertCircle } from "lucide-react";
-import type { MediaInfo } from "../types";
 import React, { useState } from "react";
 import {
   User,
@@ -24,7 +21,6 @@ interface MediaPreviewProps {
   onSelectCookieFile?: () => Promise<string | null>;
 }
 
-export const MediaPreview: React.FC<MediaPreviewProps> = ({ media, error }) => {
 export const MediaPreview: React.FC<MediaPreviewProps> = ({
   media,
   error,
