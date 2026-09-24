@@ -15,14 +15,7 @@ import fs from "node:fs";
 import { BinManager } from "./binManager";
 import { YtdlpRunner } from "./ytdlpRunner";
 import { AppStore } from "./store";
-import {
-  validateMediaUrl,
-  validateDownloadOptions,
-  validateSettingsUpdate,
-  isInsideDirectory,
-  isSafePathToOpen,
-  sanitizeErrorMessage,
-} from "./security";
+import type { DownloadOptions } from "../src/types";
 
 process.env.DIST = path.join(__dirname, "../dist");
 process.env.VITE_PUBLIC = app?.isPackaged
@@ -176,17 +169,13 @@ app.on("window-all-closed", () => {
 
 function setupIpcHandlers() {
   // Inspect URL (handles playlists and single media)
-  ipcMain.handle("inspect-url", async (_event, targetUrl: unknown) => {
+  ipcMain.handle("inspect-url", async (_event, targetUrl: string) => {
     try {
-      const validUrl = validateMediaUrl(targetUrl);
       const currentSettings = appStore.getSettings();
-      const data = await ytdlpRunner.inspectUrl(validUrl, currentSettings);
+      const data = await ytdlpRunner.inspectUrl(targetUrl, currentSettings);
       return { success: true, data };
     } catch (err: any) {
-      return {
-        success: false,
-        error: sanitizeErrorMessage(err.message || "Failed to inspect URL"),
-      };
+      return { success: false, error: err.message || "Failed to inspect URL" };
     }
   });
 
@@ -201,13 +190,9 @@ function setupIpcHandlers() {
   });
 
   // Start Download
-  ipcMain.handle("start-download", async (_event, rawOptions: unknown) => {
+  ipcMain.handle("start-download", async (_event, options: DownloadOptions) => {
     try {
       const currentSettings = appStore.getSettings();
-      const defaultPath =
-        currentSettings.defaultDownloadPath || app.getPath("downloads");
-      const options = validateDownloadOptions(rawOptions, defaultPath);
-
       ytdlpRunner.startDownload(
         options,
         (progress) => {
@@ -244,19 +229,13 @@ function setupIpcHandlers() {
       );
       return { success: true, id: options.id };
     } catch (err: any) {
-      return {
-        success: false,
-        error: sanitizeErrorMessage(err.message || "Failed to start download"),
-      };
+      return { success: false, id: options.id, error: err.message };
     }
   });
 
   // Cancel Download
-  ipcMain.handle("cancel-download", async (_event, id: unknown) => {
-    if (typeof id !== "string" || !id.trim()) {
-      return { success: false, error: "Invalid download id" };
-    }
-    const success = ytdlpRunner.cancelDownload(id.trim());
+  ipcMain.handle("cancel-download", async (_event, id: string) => {
+    const success = ytdlpRunner.cancelDownload(id);
     return { success };
   });
 
@@ -265,15 +244,8 @@ function setupIpcHandlers() {
     return appStore.getSettings();
   });
 
-  ipcMain.handle("save-settings", async (_event, newSettings: unknown) => {
-    try {
-      const current = appStore.getSettings();
-      const validated = validateSettingsUpdate(newSettings, current);
-      return appStore.saveSettings(validated);
-    } catch (err: any) {
-      console.error("Failed to save settings:", err);
-      return appStore.getSettings();
-    }
+  ipcMain.handle("save-settings", async (_event, newSettings) => {
+    return appStore.saveSettings(newSettings);
   });
 
   // Select Folder dialog
@@ -319,10 +291,8 @@ function setupIpcHandlers() {
     appStore.clearHistory();
   });
 
-  ipcMain.handle("delete-history-item", async (_event, id: unknown) => {
-    if (typeof id === "string" && id.trim()) {
-      appStore.deleteHistoryItem(id.trim());
-    }
+  ipcMain.handle("delete-history-item", async (_event, id: string) => {
+    appStore.deleteHistoryItem(id);
   });
 
   ipcMain.handle("clean-missing-history", async () => {
@@ -336,33 +306,19 @@ function setupIpcHandlers() {
   });
 
   // Shell Actions
-  ipcMain.handle("open-path", async (_event, filePath: unknown) => {
-    if (typeof filePath !== "string" || !filePath.trim()) {
+  ipcMain.handle("open-path", async (_event, filePath: string) => {
+    if (!filePath) {
       return { success: false, error: "No file path specified." };
     }
-    const targetPath = filePath.trim();
-    if (!fs.existsSync(targetPath)) {
+    if (!fs.existsSync(filePath)) {
       return {
         success: false,
         error:
           "File not found on disk. It may have been moved, renamed, or deleted.",
       };
     }
-
-    const settings = appStore?.getSettings();
-    const approvedDirs = [
-      settings?.defaultDownloadPath,
-      app.getPath("downloads"),
-      app.getPath("userData"),
-    ].filter((dir): dir is string => Boolean(dir));
-
-    const check = isSafePathToOpen(targetPath, approvedDirs);
-    if (!check.safe) {
-      return { success: false, error: check.reason };
-    }
-
     try {
-      const err = await shell.openPath(targetPath);
+      const err = await shell.openPath(filePath);
       if (err) {
         return { success: false, error: err };
       }
@@ -372,40 +328,18 @@ function setupIpcHandlers() {
     }
   });
 
-  ipcMain.handle("show-in-folder", async (_event, filePath: unknown) => {
-    if (typeof filePath !== "string" || !filePath.trim()) {
+  ipcMain.handle("show-in-folder", async (_event, filePath: string) => {
+    if (!filePath) {
       return { success: false, error: "No file path specified." };
     }
-    const targetPath = filePath.trim();
-    const settings = appStore?.getSettings();
-    const approvedDirs = [
-      settings?.defaultDownloadPath,
-      app.getPath("downloads"),
-      app.getPath("userData"),
-    ].filter((dir): dir is string => Boolean(dir));
-
-    if (fs.existsSync(targetPath)) {
-      if (!approvedDirs.some((dir) => isInsideDirectory(targetPath, dir))) {
-        return {
-          success: false,
-          error:
-            "Security Block: Target file is outside approved download directories.",
-        };
-      }
-      shell.showItemInFolder(targetPath);
+    if (fs.existsSync(filePath)) {
+      shell.showItemInFolder(filePath);
       return { success: true };
     }
 
-    // If file is missing, try opening parent directory if contained
-    const parentDir = path.dirname(targetPath);
+    // If file is missing, try opening parent directory
+    const parentDir = path.dirname(filePath);
     if (fs.existsSync(parentDir)) {
-      if (!approvedDirs.some((dir) => isInsideDirectory(parentDir, dir))) {
-        return {
-          success: false,
-          error:
-            "Security Block: Destination folder is outside approved download directories.",
-        };
-      }
       await shell.openPath(parentDir);
       return {
         success: true,
